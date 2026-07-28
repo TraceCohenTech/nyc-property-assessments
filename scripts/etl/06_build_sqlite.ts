@@ -391,6 +391,10 @@ async function main() {
     CREATE INDEX idx_pv2_bbl ON properties_v2 (bbl);
     CREATE INDEX idx_pv2_borough ON properties_v2 (borough_name);
     CREATE INDEX idx_pv2_zip ON properties_v2 (zip);
+    -- Property-detail page "other lots at this address" lookup (WHERE full_address = ?).
+    -- Without this, that query is a full table scan (~1.17M rows, ~8-9s) — the sole cause of
+    -- /properties/[bbl] pages taking 8-11s in production (found + fixed 2026-07-28).
+    CREATE INDEX idx_pv2_full_address ON properties_v2 (full_address);
     CREATE INDEX idx_pv2_owner_normalized ON properties_v2 (owner_normalized);
     CREATE INDEX idx_pv2_owner_group_id ON properties_v2 (owner_group_id);
     CREATE INDEX idx_pv2_tax_class ON properties_v2 (tax_class);

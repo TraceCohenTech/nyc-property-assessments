@@ -5,7 +5,13 @@ import { toListItem } from "../route";
 // Returns every properties_v2 row sharing a given base BBL (the ordinary parcel row plus any
 // easement rows — see DATA_DICTIONARY.md on bbl vs bbl_full). Accepts either a bare 10-digit
 // bbl or a full bbl_full (bbl + ease code); either way every row for that base BBL is returned.
-export const dynamic = "force-dynamic";
+//
+// FY2027 DOF roll is a static annual snapshot — same ISR idiom as /properties/[bbl]/page.tsx:
+// render on first request per BBL, cache indefinitely (force-static + dynamicParams), rather
+// than re-querying Turso on every hit.
+export const dynamic = "force-static";
+export const dynamicParams = true;
+export const revalidate = false;
 
 export async function GET(_request: NextRequest, { params }: { params: Promise<{ bbl: string }> }) {
   const { bbl: raw } = await params;

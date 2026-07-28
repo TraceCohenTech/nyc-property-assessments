@@ -5,7 +5,15 @@ import type { LookupResult, RentStatus } from "@/components/rent-regulation/type
 // Address/BBL -> HCR rent-stabilized-building-list lookup. Queries the `rent_stabilized` table
 // (built by scripts/etl/08_ingest_hcr.ts) plus a live structural-candidate check against
 // properties_v2, rather than shipping the full 16MB hcr_buildings.json to the client.
+//
+// Takes `q` as a search param (not a path param), so this can't use force-static the way
+// /properties/[bbl] does — same Cache-Control approach as /api/properties instead. All lookups
+// here are already index-backed (bbl equality, FTS match) so this route was never part of the
+// 8-11s /properties/[bbl] regression; the header is a CDN-hit-rate win on top of already-fast
+// queries, not a fix for a measured slowdown.
 export const dynamic = "force-dynamic";
+
+const LOOKUP_CACHE_CONTROL = "public, s-maxage=3600, stale-while-revalidate=86400";
 
 const CANDIDATE_WHERE = `
   year_built IS NOT NULL AND year_built > 0 AND year_built < 1974
@@ -44,7 +52,10 @@ export async function GET(request: NextRequest) {
     }
 
     if (!propRow) {
-      return NextResponse.json({ found: false, status: "not_identified", hcr_listed: false } satisfies LookupResult);
+      return NextResponse.json(
+        { found: false, status: "not_identified", hcr_listed: false } satisfies LookupResult,
+        { headers: { "Cache-Control": LOOKUP_CACHE_CONTROL } }
+      );
     }
 
     const bbl = String(propRow.bbl);
@@ -84,7 +95,7 @@ export async function GET(request: NextRequest) {
       join_confidence: hcrRow ? (hcrRow.join_confidence as string) : undefined,
       source_year: hcrRow ? (hcrRow.source_year as string) : undefined,
     };
-    return NextResponse.json(result);
+    return NextResponse.json(result, { headers: { "Cache-Control": LOOKUP_CACHE_CONTROL } });
   } catch (err) {
     console.error("rent-regulation lookup error", err);
     return NextResponse.json({ error: "Lookup failed" }, { status: 500 });

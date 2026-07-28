@@ -14,7 +14,15 @@ import { ConfidenceBadge } from "@/components/ui/ConfidenceBadge";
 import { DefinitionTooltip } from "@/components/ui/DefinitionTooltip";
 import { ShareButton } from "@/components/ui/ShareButton";
 
-export const dynamic = "force-dynamic"; // 1.17M possible BBLs — no SSG
+// FY2027 DOF roll is a static annual snapshot — it never changes until next year's ETL.
+// 1.17M possible BBLs makes generateStaticParams infeasible, so instead of force-dynamic
+// (which re-ran the Turso query set on every single request) this uses the standard ISR
+// "generate on first visit, cache forever" idiom: force-static + dynamicParams renders each
+// BBL on-demand exactly once, then the Full Route Cache serves it instantly from then on.
+// Bump the (implicit) build ID on the next ETL cutover to bust the cache for a new roll year.
+export const dynamic = "force-static";
+export const dynamicParams = true;
+export const revalidate = false;
 
 const CONFIDENCE_MAP: Record<string, "high" | "medium" | "low"> = {
   Confirmed: "high",

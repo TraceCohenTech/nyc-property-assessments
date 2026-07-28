@@ -4,8 +4,15 @@ import { displayOwner, isEntityOwner } from "@/lib/ownerPrivacy";
 import { parseFilters, ftsQuery, isBblLike } from "@/lib/explorer/query";
 
 // The Explorer's workhorse: filters + sort + pagination against the SQLite/Turso
-// properties_v2 table. Dynamic — reads request.url on every call, no caching.
+// properties_v2 table. Dynamic — reads request.nextUrl.searchParams on every call, so this
+// can't use force-static (that would force searchParams to read empty). Instead the response
+// carries a Cache-Control header so Vercel's CDN edge caches each distinct filter-combo URL —
+// the FY2027 roll is a static snapshot, so a same-URL repeat request never needs to hit Turso
+// again. s-maxage is kept well under "forever" (unlike the per-BBL pages) since this is the
+// query surface most likely to get a corrective data patch without a full redeploy.
 export const dynamic = "force-dynamic";
+
+const LIST_CACHE_CONTROL = "public, s-maxage=3600, stale-while-revalidate=86400";
 
 export type PropertyListItem = {
   bbl: string;
@@ -100,13 +107,16 @@ export async function GET(request: NextRequest) {
     const rows = dataResult.rows as unknown as PropertyRow[];
     const results = rows.map(toListItem);
 
-    return NextResponse.json({
-      total,
-      page: parsed.page,
-      page_size: parsed.pageSize,
-      total_pages: Math.max(1, Math.ceil(total / parsed.pageSize)),
-      results,
-    });
+    return NextResponse.json(
+      {
+        total,
+        page: parsed.page,
+        page_size: parsed.pageSize,
+        total_pages: Math.max(1, Math.ceil(total / parsed.pageSize)),
+        results,
+      },
+      { headers: { "Cache-Control": LIST_CACHE_CONTROL } }
+    );
   } catch (err) {
     console.error("properties list error", err);
     return NextResponse.json({ error: "Query failed" }, { status: 500 });
