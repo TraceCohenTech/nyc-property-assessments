@@ -12,6 +12,7 @@ export const PRIMARY_NAV: NavLink[] = [
   { href: "/boroughs", label: "Boroughs" },
   { href: "/owners", label: "Owners" },
   { href: "/housing", label: "Housing" },
+  { href: "/value-concentration", label: "Value Concentration" },
   { href: "/tax-classes", label: "Tax Classes" },
   { href: "/rent-regulation", label: "Rent Regulation" },
   { href: "/methodology", label: "Methodology" },

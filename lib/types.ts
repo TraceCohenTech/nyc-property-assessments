@@ -81,6 +81,8 @@ export type ValueBand = {
 
 export type ConcentrationPoint = { pct_lots: number; pct_value: number };
 
+export type TopNBreakdownRow = { n: number; total_value: number; share: number };
+
 export type Concentration = {
   curve: ConcentrationPoint[];
   top_n: number;
@@ -88,9 +90,10 @@ export type Concentration = {
   pct_lots_for_80pct_value: number;
   lots_above_10m: number;
   lots_above_50m: number;
+  top_n_breakdown: TopNBreakdownRow[];
 };
 
-export type OwnershipByType = { type: string; lots: number; total_value: number };
+export type OwnershipByType = { type: string; lots: number; total_value: number; residential_units: number };
 
 export type Ownership = {
   by_entity_type: OwnershipByType[];

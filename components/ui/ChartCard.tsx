@@ -7,8 +7,8 @@ export function ChartCard({
   children,
   className = "",
 }: {
-  title: string;
-  sub?: string;
+  title: ReactNode;
+  sub?: ReactNode;
   height?: number;
   children: ReactNode;
   className?: string;
