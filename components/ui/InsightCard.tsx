@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { ArrowRight } from "lucide-react";
+import { CATEGORICAL } from "@/lib/colors";
 
 export function InsightCard({
   eyebrow,
@@ -9,7 +10,7 @@ export function InsightCard({
   href,
   linkLabel = "Explore this",
   chart,
-  accent = "#2a78d6",
+  accent = CATEGORICAL.blue,
 }: {
   eyebrow: string;
   headline: string;

@@ -1,27 +1,29 @@
+import { CATEGORICAL } from "@/lib/colors";
+
 const STAGES = [
   {
     title: "Tentative Roll",
     when: "Published Jan 15",
     desc: "DOF sets a proposed market & assessed value for every property, based on sales, income, and cost data.",
-    color: "#2a78d6",
+    color: CATEGORICAL.blue,
   },
   {
     title: "Protest Window",
     when: "Jan 15 – Mar 1–15",
     desc: "Owners can challenge their value with the Tax Commission before the roll finalizes.",
-    color: "#eb6834",
+    color: CATEGORICAL.orange,
   },
   {
     title: "Change by Notice",
     when: "Spring",
     desc: "DOF issues Notices of Property Value reflecting corrections, exemptions, and abatements.",
-    color: "#1baf7a",
+    color: CATEGORICAL.aqua,
   },
   {
     title: "Final Roll",
     when: "Published ~May 25",
     desc: "Values lock for the fiscal year and become the basis for property tax bills.",
-    color: "#008300",
+    color: CATEGORICAL.green,
   },
 ];
 

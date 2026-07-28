@@ -36,7 +36,7 @@ import {
 } from "@/components/charts/InsightCharts";
 import { formatUSD, formatUSDAuto, formatNumber, formatPct } from "@/lib/format";
 import { isEntityOwner } from "@/lib/ownerPrivacy";
-import { CATEGORICAL_ORDER } from "@/lib/colors";
+import { CATEGORICAL, CATEGORICAL_ORDER } from "@/lib/colors";
 
 const data = raw as unknown as Aggregates;
 const insights = insightsRaw as unknown as InsightsData;
@@ -394,19 +394,19 @@ export default function Home() {
                   label="Class 1 — 1-3 family homes"
                   ratio={class1.assessment_ratio}
                   desc={`${formatNumber(class1.count)} homes, ${formatUSD(class1.total_market_value, 1)} in market value — assessed on just ${formatPct(class1.assessment_ratio)} of it.`}
-                  accent="#2a78d6"
+                  accent={CATEGORICAL.blue}
                 />
                 <RatioCallout
                   label="Class 2 — Rentals & co-ops/condos"
                   ratio={class2.assessment_ratio}
                   desc={`${formatNumber(class2.count)} units, assessed on ${formatPct(class2.assessment_ratio)} of market value — ${ratioGap.toFixed(1)}× Class 1's share.`}
-                  accent="#eb6834"
+                  accent={CATEGORICAL.orange}
                 />
                 <RatioCallout
                   label="Class 4 — Commercial"
                   ratio={class4.assessment_ratio}
                   desc={`${formatNumber(class4.count)} commercial properties, also assessed on ${formatPct(class4.assessment_ratio)} of market value.`}
-                  accent="#008300"
+                  accent={CATEGORICAL.green}
                 />
               </div>
             </Reveal>

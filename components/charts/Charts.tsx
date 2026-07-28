@@ -13,7 +13,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { AXIS_TICK, CATEGORICAL, CHART_TOOLTIP_STYLE, GRID_STROKE } from "@/lib/colors";
+import { AXIS_TICK, CATEGORICAL, CATEGORICAL_ORDER, CHART_TOOLTIP_STYLE, GRID_STROKE } from "@/lib/colors";
 import { formatUSD, formatUSDFull, formatNumber } from "@/lib/format";
 
 type TaxClassRow = {
@@ -108,9 +108,8 @@ export function BoroughValueChart({ boroughs }: { boroughs: BoroughRow[] }) {
 type BuildingClassRow = { building_class: string; count: number; total_assessed_value: number };
 
 export function BuildingClassChart({ classes }: { classes: BuildingClassRow[] }) {
-  const max = Math.max(...classes.map((c) => c.count));
   return (
-    <div role="img" className="h-full" aria-label="Horizontal-style bar chart ranking the top NYC building classes by property count, tallest bar highlighted in blue">
+    <div role="img" className="h-full" aria-label="Horizontal-style bar chart ranking the top NYC building classes by property count, each bar a distinct color">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={classes} layout="vertical" margin={{ top: 4, right: 24, left: 8, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke={GRID_STROKE} horizontal={false} />
@@ -121,8 +120,8 @@ export function BuildingClassChart({ classes }: { classes: BuildingClassRow[] })
             formatter={(v: unknown) => [formatNumber(Number(v)), "Properties"]}
           />
           <Bar dataKey="count" radius={[0, 6, 6, 0]} animationDuration={900}>
-            {classes.map((c) => (
-              <Cell key={c.building_class} fill={c.count === max ? CATEGORICAL.blue : "#93c5fd"} />
+            {classes.map((c, i) => (
+              <Cell key={c.building_class} fill={CATEGORICAL_ORDER[i % CATEGORICAL_ORDER.length]} />
             ))}
           </Bar>
         </BarChart>
@@ -134,9 +133,8 @@ export function BuildingClassChart({ classes }: { classes: BuildingClassRow[] })
 type OwnerRow = { owner: string; property_count: number; total_assessed_value: number };
 
 export function TopOwnersChart({ owners }: { owners: OwnerRow[] }) {
-  const max = Math.max(...owners.map((o) => o.total_assessed_value));
   return (
-    <div role="img" className="h-full" aria-label="Horizontal-style bar chart ranking the largest private property owners in NYC by total assessed value, tallest bar highlighted in orange">
+    <div role="img" className="h-full" aria-label="Horizontal-style bar chart ranking the largest private property owners in NYC by total assessed value, each bar a distinct color">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={owners} layout="vertical" margin={{ top: 4, right: 24, left: 8, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke={GRID_STROKE} horizontal={false} />
@@ -153,8 +151,8 @@ export function TopOwnersChart({ owners }: { owners: OwnerRow[] }) {
             formatter={(v: unknown) => [formatUSDFull(Number(v)), "Total assessed value"]}
           />
           <Bar dataKey="total_assessed_value" radius={[0, 6, 6, 0]} animationDuration={900}>
-            {owners.map((o) => (
-              <Cell key={o.owner} fill={o.total_assessed_value === max ? CATEGORICAL.orange : "#fdba8c"} />
+            {owners.map((o, i) => (
+              <Cell key={o.owner} fill={CATEGORICAL_ORDER[i % CATEGORICAL_ORDER.length]} />
             ))}
           </Bar>
         </BarChart>
