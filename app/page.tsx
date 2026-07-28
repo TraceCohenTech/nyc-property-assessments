@@ -14,6 +14,7 @@ import insightsRaw from "@/data/insights.json";
 import type { Aggregates, Borough, InsightsData } from "@/lib/types";
 import { CountUp } from "@/components/CountUp";
 import { Reveal } from "@/components/Reveal";
+import { HeroCanvas } from "@/components/HeroCanvas";
 import { AssessmentFlowDiagram } from "@/components/AssessmentFlowDiagram";
 import { SearchTool } from "@/components/SearchTool";
 import { ZipTable } from "@/components/ZipTable";
@@ -72,16 +73,20 @@ export default function Home() {
     <div id="top" className="min-h-screen text-slate-900">
       {/* HERO */}
       <header className="relative overflow-hidden bg-slate-950 text-white pt-24 sm:pt-28 pb-16 sm:pb-24 noise-overlay">
-        <div className="mesh-bg" aria-hidden="true">
-          <div className="mesh-blob-3" />
-        </div>
         <div className="absolute inset-0 grid-pattern opacity-60" aria-hidden="true" />
+        <HeroCanvas
+          boroughs={boroughsByValue.map((b) => ({ borough: b.borough, value: b.total_market_value }))}
+        />
+        <div
+          className="absolute -top-40 right-[-10%] h-[520px] w-[520px] rounded-full bg-cyan-500/10 blur-[120px]"
+          aria-hidden="true"
+        />
         <div className="relative mx-auto max-w-[1600px] px-4 sm:px-6">
           <Reveal>
             <div className="flex flex-wrap items-center gap-3 mb-5">
               <span className="inline-flex items-center gap-2 rounded-full bg-emerald-500/15 border border-emerald-400/30 px-3 py-1 text-xs font-semibold text-emerald-300">
                 <span className="relative flex h-2 w-2">
-                  <span className="absolute inset-0 rounded-full bg-emerald-400 pulse-dot" />
+                  <span className="absolute inset-0 rounded-full bg-emerald-400 pulse-dot-once" />
                   <span className="relative rounded-full h-2 w-2 bg-emerald-400" />
                 </span>
                 DOF FY2027 Final Assessment Roll

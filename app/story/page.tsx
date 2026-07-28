@@ -141,8 +141,17 @@ export default function StoryPage() {
     <div className="pb-24">
       <ProgressIndicator sectionIds={sectionIds} labels={labels} />
 
-      <div className="pt-28 sm:pt-36 pb-16 sm:pb-24 bg-gradient-to-b from-slate-50 to-white border-b border-slate-100">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 text-center">
+      <div className="relative overflow-hidden pt-28 sm:pt-36 pb-16 sm:pb-24 bg-gradient-to-b from-slate-50 to-white border-b border-slate-100">
+        <div
+          className="absolute inset-0 opacity-[0.35] [mask-image:radial-gradient(ellipse_60%_70%_at_50%_0%,black,transparent)]"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(15,23,42,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(15,23,42,0.06) 1px, transparent 1px)",
+            backgroundSize: "40px 40px",
+          }}
+          aria-hidden="true"
+        />
+        <div className="relative mx-auto max-w-4xl px-4 sm:px-6 text-center">
           <div className="flex justify-center mb-4">
             <SourceBadge />
           </div>

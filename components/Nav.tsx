@@ -39,7 +39,7 @@ export function Nav() {
                 key={l.href}
                 href={l.href}
                 aria-current={active ? "page" : undefined}
-                className={`px-2.5 py-1.5 rounded-md text-[13px] font-medium transition active:scale-[0.97] whitespace-nowrap ${
+                className={`relative px-2.5 py-1.5 rounded-md text-[13px] font-medium transition active:scale-[0.97] whitespace-nowrap nav-link ${
                   active
                     ? solid
                       ? "bg-blue-50 text-blue-700"
@@ -50,6 +50,12 @@ export function Nav() {
                 }`}
               >
                 {l.label}
+                {!active && (
+                  <span
+                    aria-hidden="true"
+                    className={`nav-link-underline ${solid ? "bg-blue-600" : "bg-white"}`}
+                  />
+                )}
               </Link>
             );
           })}
