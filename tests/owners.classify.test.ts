@@ -43,6 +43,16 @@ test("partnership and LLC distinction", () => {
   assert.equal(classifyOwnerEntityType("123 REALTY LLC"), "LLC");
 });
 
+test("punctuated LLC/LP suffixes still classify correctly (regression)", () => {
+  assert.equal(classifyOwnerEntityType("44 WEST 11TH STREET, L.L.C."), "LLC");
+  assert.equal(classifyOwnerEntityType("29 CHELSEA SQUARE NORTH, L.P."), "Partnership");
+  assert.equal(classifyOwnerEntityType("123 MAIN ST L L C"), "LLC");
+});
+
+test("foreign diplomatic missions classified as Government", () => {
+  assert.equal(classifyOwnerEntityType("PERMANENT MISSION OF THE REPUBLIC OF CUBA"), "Government");
+});
+
 test("blank / unavailable owner treated as Unknown/Other but privacy-safe", () => {
   assert.equal(classifyOwnerEntityType(""), "Unknown/Other");
   assert.equal(classifyOwnerEntityType("UNAVAILABLE OWNER"), "Unknown/Other");

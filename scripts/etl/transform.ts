@@ -37,6 +37,17 @@ function trimOrNull(raw: string | undefined): string | null {
   return s === "" ? null : s;
 }
 
+// ~24K rows (mostly government/utility/park parcels with no mailing address) have ZIP_CODE
+// stored as literal "0" rather than blank -- treat that (and any non-5-digit value) as null
+// rather than a fake zip code.
+function normalizeZip(zip: string | null): string | null {
+  if (!zip) return null;
+  const digitsOnly = zip.replace(/\D/g, "");
+  const first5 = digitsOnly.slice(0, 5);
+  if (first5.length !== 5 || first5 === "00000") return null;
+  return first5;
+}
+
 function valueBand(marketValue: number | null): string {
   if (marketValue === null || marketValue < 0) return "Unknown";
   if (marketValue < 500_000) return "<$500K";
@@ -268,7 +279,7 @@ export function transformRow(fields: string[], sourceDataset: string): CleanRow 
     house_number_hi: houseHi,
     street_name: streetName,
     full_address: fullAddress,
-    zip: zip && zip.length >= 5 ? zip.slice(0, 5) : zip,
+    zip: normalizeZip(zip),
     owner_raw: ownerRaw,
     owner_normalized: ownerNormalized,
     owner_entity_type: ownerEntityType,

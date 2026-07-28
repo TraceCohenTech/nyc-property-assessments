@@ -17,6 +17,8 @@ const SUFFIX_REPLACEMENTS: [RegExp, string][] = [
   [/\bL\.?L\.?C\.?\b/g, "LLC"],
   [/\bL\s*L\s*P\b\.?/g, "LLP"],
   [/\bL\.?L\.?P\.?\b/g, "LLP"],
+  [/\bL\s*L\s*L\s*P\b\.?/g, "LLLP"],
+  [/\bL\s*P\b\.?/g, "LP"],
   [/\bINCORPORATED\b/g, "INC"],
   [/\bINC\.?\b/g, "INC"],
   [/\bCORPORATION\b/g, "CORP"],

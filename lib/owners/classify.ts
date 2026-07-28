@@ -16,6 +16,8 @@
 // "not proven to be an entity -> treat as Individual -> mask", which is a separate, stricter
 // rule than this function's classification label).
 
+import { normalizeOwnerName } from "./normalize";
+
 export type EntityType =
   | "Individual"
   | "LLC"
@@ -235,16 +237,22 @@ export function classifyOwnerEntityType(raw: string | null | undefined): EntityT
   if (!raw || !raw.trim()) return "Unknown/Other";
   const upper = raw.toUpperCase().trim();
   if (upper === "UNAVAILABLE OWNER") return "Unknown/Other";
+  // Punctuation/spacing-normalized form ("L.L.C." / "L L C" / "LLC" all -> "LLC", etc.) so the
+  // \bLLC\b / \bLP\b / \bTRUST\b-style regex checks below aren't fooled by a period or extra
+  // spaces breaking the word boundary (e.g. "44 WEST 11TH STREET, L.L.C." must still hit LLC).
+  const normalized = normalizeOwnerName(raw);
 
   if (includesAny(upper, GOVERNMENT_PHRASES)) return "Government";
   // Bare "NYC " / trailing "NYC" prefix catch (e.g. "NYC DOT", "NYC DEP") not already covered.
   if (/^NYC\s/.test(upper) || / NYC$/.test(upper)) return "Government";
+  // Foreign diplomatic missions / consulates are sovereign-government-owned property.
+  if (/\bPERMANENT MISSION\b|\bCONSULATE\b|\bEMBASSY\b|\bREPUBLIC OF\b|\bKINGDOM OF\b/.test(upper)) return "Government";
 
   if (includesAny(upper, HOUSING_COMPANY_PHRASES)) return "Housing company";
   if (HDFC_PATTERN.test(upper)) return "Housing company";
-  if (COOP_PATTERN.test(upper)) return "Cooperative corporation";
+  if (COOP_PATTERN.test(normalized)) return "Cooperative corporation";
 
-  if (TRUST_PATTERN.test(upper)) return "Trust/Estate";
+  if (TRUST_PATTERN.test(normalized)) return "Trust/Estate";
 
   if (includesAny(upper, PRIVATE_UTILITY_PHRASES)) return "Corporation";
 
@@ -254,8 +262,8 @@ export function classifyOwnerEntityType(raw: string | null | undefined): EntityT
     if (w.some((t) => NONPROFIT_WORD_TOKENS.has(t))) return "Nonprofit/Institution";
   }
 
-  if (LLC_PATTERN.test(upper)) return "LLC";
-  if (PARTNERSHIP_PATTERN.test(upper)) return "Partnership";
+  if (LLC_PATTERN.test(normalized)) return "LLC";
+  if (PARTNERSHIP_PATTERN.test(normalized)) return "Partnership";
 
   {
     const w = words(upper);
