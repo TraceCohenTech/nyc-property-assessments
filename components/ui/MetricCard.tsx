@@ -7,7 +7,7 @@ export function MetricCard({
   accent,
   icon,
 }: {
-  label: string;
+  label: ReactNode;
   value: ReactNode;
   sub?: ReactNode;
   accent?: string;

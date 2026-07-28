@@ -10,6 +10,7 @@ import { BoroughValueChart } from "@/components/charts/Charts";
 import { MetricCard } from "@/components/ui/MetricCard";
 import { ChartCard } from "@/components/ui/ChartCard";
 import { SourceBadge } from "@/components/ui/SourceBadge";
+import { BoroughCompareTool } from "@/components/boroughs/BoroughCompareTool";
 
 const data = raw as unknown as Aggregates;
 
@@ -76,6 +77,10 @@ export default function BoroughsPage() {
           <ChartCard title="Total market value by borough" sub="Sum of DOF market value estimates" height={360}>
             <BoroughValueChart boroughs={data.boroughs} />
           </ChartCard>
+        </div>
+
+        <div id="compare" className="mt-10">
+          <BoroughCompareTool boroughs={boroughs} />
         </div>
       </div>
     </div>
