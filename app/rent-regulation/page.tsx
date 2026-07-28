@@ -16,6 +16,7 @@ import { ChartCard } from "@/components/ui/ChartCard";
 import { StatusDefinitionCards } from "@/components/rent-regulation/StatusCards";
 import { LookupTool } from "@/components/rent-regulation/LookupTool";
 import { OwnerGroupsTable } from "@/components/rent-regulation/OwnerGroupsTable";
+import { RentOverlaysSection } from "@/components/rent-regulation/RentOverlaysSection";
 import {
   ConfirmedByBoroughChart,
   ConfirmedByAgeChart,
@@ -196,6 +197,8 @@ export default function RentRegulationPage() {
             </div>
           </div>
         </section>
+
+        <RentOverlaysSection />
 
         <section className="mt-10">
           <h2 className="text-xl font-bold text-slate-900 mb-1">Top entity owners of HCR-confirmed buildings</h2>
