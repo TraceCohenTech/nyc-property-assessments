@@ -110,6 +110,92 @@ export type Housing = {
 
 export type BoroughHeadliner = { borough: string; headline: string; stat: string };
 
+/**
+ * data/owners/index.json + data/owners/[slug].json contracts, produced by
+ * scripts/etl/05_build_owner_profiles.ts. ENTITY-ONLY — Individual and Unknown/Other owners
+ * are never grouped, ranked, or profiled here (see OWNER_CONSOLIDATION_METHODOLOGY.md).
+ */
+export type OwnerConfidence = "high" | "medium" | "low";
+
+export type OwnerIndexRow = {
+  slug: string;
+  name: string;
+  owner_type: string;
+  confidence: OwnerConfidence;
+  lots: number;
+  total_market_value: number;
+  total_assessed_value: number;
+  residential_units: number;
+  total_units: number;
+  borough_count: number;
+  boroughs: string[];
+};
+
+export type OwnersIndex = {
+  meta: { generated_at: string; source_row_count: number; method_note: string };
+  owners: OwnerIndexRow[];
+};
+
+export type OwnerAlias = { raw: string; lots: number };
+export type OwnerBoroughDistRow = { borough: string; lots: number; total_market_value: number };
+export type OwnerCountDistRow = { lots: number } & Record<string, string | number>;
+export type OwnerTopProperty = {
+  bbl: string;
+  address: string;
+  borough: string;
+  market_value: number;
+  residential_units: number;
+  total_units: number;
+  building_class: string;
+};
+
+export type OwnerProfile = {
+  slug: string;
+  name: string;
+  owner_type: string;
+  confidence: OwnerConfidence;
+  evidence: string;
+  alias_count: number;
+  aliases: OwnerAlias[];
+  totals: {
+    lots: number;
+    total_market_value: number;
+    total_assessed_value: number;
+    residential_units: number;
+    total_units: number;
+    borough_count: number;
+  };
+  borough_distribution: OwnerBoroughDistRow[];
+  property_type_distribution: { property_type: string; lots: number }[];
+  tax_class_distribution: { tax_class: string; lots: number }[];
+  value_band_distribution: { band: string; lots: number }[];
+  year_built_distribution: { bucket: string; lots: number }[];
+  zip_spread: { zip: string; lots: number }[];
+  top_properties: OwnerTopProperty[];
+  meta: { generated_at: string };
+};
+
+/** data/borough/[slug].json contract, produced by scripts/etl/04_build_aggregates.ts. */
+export type BoroughProfile = {
+  borough: string;
+  meta: { generated_at: string; row_count: number };
+  totals: {
+    count: number;
+    total_market_value: number;
+    total_assessed_value: number;
+    total_taxable_value: number;
+    residential_units: number;
+  };
+  medians: { median_market_value: number; median_value_per_resid_unit: number; avg_year_built: number };
+  tax_class_distribution: { tax_class: string; count: number; total_market_value: number; total_assessed_value: number }[];
+  property_type_distribution: { property_type: string; count: number }[];
+  value_band_distribution: { band: string; count: number }[];
+  entity_mix: { type: string; lots: number; total_value: number; residential_units: number }[];
+  zip_breakdown: { zip: string; count: number; total_market_value: number; total_assessed_value: number }[];
+  top_entity_owners: Owner[];
+  top_properties: { bbl: string; market_value: number; owner_display: string; building_class: string }[];
+};
+
 export type InsightsData = {
   placeholder?: boolean;
   meta: { generated_at: string; canonical_row_count: number; note?: string };
