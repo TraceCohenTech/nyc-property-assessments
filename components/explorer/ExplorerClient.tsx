@@ -293,13 +293,27 @@ export function ExplorerClient({ boroughs }: { boroughs: Borough[] }) {
             <button
               type="button"
               onClick={() => setColMenuOpen((o) => !o)}
+              onKeyDown={(e) => {
+                if (e.key === "Escape") setColMenuOpen(false);
+              }}
+              aria-haspopup="true"
+              aria-expanded={colMenuOpen}
+              aria-controls="explorer-column-menu"
               className="inline-flex items-center gap-1.5 min-h-[36px] px-3 rounded-md text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 active:scale-[0.97]"
             >
               <Columns3 className="h-3.5 w-3.5" aria-hidden="true" />
               Columns
             </button>
             {colMenuOpen && (
-              <div className="absolute right-0 z-20 mt-2 w-56 rounded-xl border border-slate-200 bg-white p-3 shadow-modal">
+              <div
+                id="explorer-column-menu"
+                role="group"
+                aria-label="Toggle visible columns"
+                onKeyDown={(e) => {
+                  if (e.key === "Escape") setColMenuOpen(false);
+                }}
+                className="absolute right-0 z-20 mt-2 w-56 rounded-xl border border-slate-200 bg-white p-3 shadow-modal"
+              >
                 {ALL_COLUMNS.map((c) => (
                   <label key={c.key} className="flex items-center gap-2 py-1 text-xs text-slate-700">
                     <input

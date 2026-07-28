@@ -34,7 +34,7 @@ export function FilterPanel({
         <SlidersHorizontal className="h-4 w-4 text-blue-600" aria-hidden="true" />
         <h3 className="font-bold text-slate-900 text-sm">Filters</h3>
         {!wired && (
-          <span className="ml-auto text-[11px] font-medium text-slate-400 uppercase tracking-wider">Coming soon</span>
+          <span className="ml-auto text-[11px] font-medium text-slate-500 uppercase tracking-wider">Coming soon</span>
         )}
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">

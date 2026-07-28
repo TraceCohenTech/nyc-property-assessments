@@ -31,6 +31,7 @@ import { createReadStream, writeFileSync, mkdirSync, readdirSync, unlinkSync } f
 import { createInterface } from "node:readline";
 import { matchGovernmentGroup } from "./governmentGroups";
 import { normalizeOwnerName } from "../../lib/owners/normalize";
+import { slugify } from "../../lib/owners/slug";
 
 const CSV_PATH =
   process.env.ETL_CSV_PATH ||
@@ -120,15 +121,6 @@ function resolveGroup(
   return null; // Individual, Unknown/Other -> never grouped, never ranked, never profiled
 }
 
-function slugify(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/&/g, "and")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 80) || "owner";
-}
-
 // ---------------------------------------------------------------------------------------------
 // PASS 1 — lightweight totals per group key, to pick the top-500 published set.
 // ---------------------------------------------------------------------------------------------
@@ -151,7 +143,7 @@ async function pass1(): Promise<Map<string, LightAcc>> {
   console.log(`[pass1] streaming ${CSV_PATH} for lightweight group totals...`);
   const rl = createInterface({ input: createReadStream(CSV_PATH), crlfDelay: Infinity });
   let header: string[] | null = null;
-  let idx: Record<string, number> = {};
+  const idx: Record<string, number> = {};
   const acc = new Map<string, LightAcc>();
   let rows = 0;
 
@@ -241,7 +233,7 @@ async function pass2(topKeys: Set<string>, seed: Map<string, LightAcc>): Promise
   console.log(`[pass2] streaming ${CSV_PATH} again for full detail on ${topKeys.size} groups...`);
   const rl = createInterface({ input: createReadStream(CSV_PATH), crlfDelay: Infinity });
   let header: string[] | null = null;
-  let idx: Record<string, number> = {};
+  const idx: Record<string, number> = {};
   const acc = new Map<string, FullAcc>();
   let rows = 0;
 
@@ -368,7 +360,7 @@ async function main() {
       name = aliasesSorted[0]?.[0] ?? key;
     }
 
-    let baseSlug = slugify(name);
+    const baseSlug = slugify(name);
     const n = usedSlugs.get(baseSlug) ?? 0;
     usedSlugs.set(baseSlug, n + 1);
     const slug = n === 0 ? baseSlug : `${baseSlug}-${n + 1}`;

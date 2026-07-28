@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { AXIS_TICK, CATEGORICAL, CHART_TOOLTIP_STYLE, GRID_STROKE } from "@/lib/colors";
 import { formatNumber, formatPct, formatUSD, formatUSDFull } from "@/lib/format";
@@ -42,22 +42,28 @@ export function BoroughCompareTool({ boroughs }: { boroughs: BoroughLite[] }) {
   const [left, setLeft] = useState(boroughs[0]?.borough ?? "Manhattan");
   const [right, setRight] = useState(boroughs[1]?.borough ?? "Brooklyn");
   const [profiles, setProfiles] = useState<Record<string, BoroughProfile>>({});
-  const [loading, setLoading] = useState(false);
 
   const names = BOROUGH_NAMES;
 
-  useMemo(() => {
+  // Fetch-on-selection side effect (dynamic import + setState) — this was previously a
+  // useMemo(), which eslint-plugin-react-hooks now correctly flags as a misuse (useMemo must
+  // stay pure; side effects belong in useEffect). `loading` is derived below instead of tracked
+  // as its own state var + synchronous setLoading(true) here, which eslint-plugin-react-hooks'
+  // newer set-state-in-effect rule also flags (calling setState synchronously at the top of an
+  // effect body risks a cascading extra render) — deriving it from `profiles` during render
+  // sidesteps that entirely with identical UI behavior.
+  useEffect(() => {
     const need = [left, right].filter((n) => !profiles[n]);
     if (need.length === 0) return;
-    setLoading(true);
-    Promise.all(need.map((n) => loadBoroughProfile(n).then((p) => [n, p] as const)))
-      .then((pairs) => setProfiles((prev) => ({ ...prev, ...Object.fromEntries(pairs) })))
-      .finally(() => setLoading(false));
+    Promise.all(need.map((n) => loadBoroughProfile(n).then((p) => [n, p] as const))).then((pairs) =>
+      setProfiles((prev) => ({ ...prev, ...Object.fromEntries(pairs) }))
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [left, right]);
 
   const l = profiles[left];
   const r = profiles[right];
+  const loading = !l || !r;
 
   const chartData = l && r
     ? [

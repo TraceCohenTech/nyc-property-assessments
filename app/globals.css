@@ -186,6 +186,41 @@ button, a, select, [role="button"] {
   z-index: 1;
 }
 
+/* Respect reduced-motion preference: kill scroll-reveal/entrance/looping animations,
+   show content in its final state instead of hiding it behind a transition that never plays. */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .stagger-card {
+    animation: none;
+    opacity: 1;
+  }
+  .card-hover,
+  .card-hover:hover,
+  .card-hover:active {
+    transition: none;
+    transform: none;
+  }
+  .mesh-bg::before,
+  .mesh-bg::after,
+  .mesh-blob-3,
+  .pulse-dot,
+  .marquee-track {
+    animation: none !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* Skip-to-content link */
 .skip-link {
   position: absolute;

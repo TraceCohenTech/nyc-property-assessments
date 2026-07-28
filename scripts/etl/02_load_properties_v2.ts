@@ -1,3 +1,11 @@
+// HISTORICAL / SUPERSEDED: this script targeted the original Neon Postgres backend used during
+// early development. Production has since cut over fully to SQLite/Turso (scripts/etl/06_build_
+// sqlite.ts builds properties_v2 directly into SQLite from the clean CSV — that's the current
+// step 2→6 path, see README.md). This file is kept for provenance/history only. The `pg` npm
+// package it imports was removed from package.json dependencies as part of the Turso cutover
+// (production no longer talks to Postgres at all) — running this script again would require
+// `npm install pg` first.
+//
 // Step 2 of the ETL: create properties_v2 + owner_groups + owner_aliases in Neon, classify &
 // consolidate owners, and bulk-load properties_v2 with owner_group_id resolved INLINE (owner
 // consolidation happens in a first CSV pass, entirely in memory, before any DB write — this

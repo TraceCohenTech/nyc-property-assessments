@@ -192,7 +192,7 @@ export default function Home() {
             </Reveal>
           </div>
           {insights.placeholder && (
-            <p className="mt-3 text-xs text-slate-400 flex items-center gap-1.5">
+            <p className="mt-3 text-xs text-slate-500 flex items-center gap-1.5">
               <ConfidenceBadge level="planned" label="Preliminary insights" /> Ownership and housing figures above are
               seed estimates pending the data pipeline's full computation.
             </p>

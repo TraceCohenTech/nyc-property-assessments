@@ -18,11 +18,17 @@ export function CountUp({ to, duration = 1800, decimals = 0, prefix = "", suffix
   useEffect(() => {
     const el = elRef.current;
     if (!el) return;
+    const prefersReducedMotion =
+      typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting && !startedRef.current) {
             startedRef.current = true;
+            if (prefersReducedMotion) {
+              setValue(to);
+              return;
+            }
             const startTs = performance.now();
             const animate = (now: number) => {
               const t = Math.min(1, (now - startTs) / duration);

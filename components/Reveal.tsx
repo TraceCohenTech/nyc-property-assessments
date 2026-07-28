@@ -1,10 +1,10 @@
 "use client";
-import { useEffect, useRef, ReactNode } from "react";
+import { useEffect, useRef, ReactNode, ElementType, Ref } from "react";
 
 export function Reveal({ children, delay = 0, as: As = "div", className = "" }: {
   children: ReactNode;
   delay?: number;
-  as?: any;
+  as?: ElementType;
   className?: string;
 }) {
   const ref = useRef<HTMLElement>(null);
@@ -26,7 +26,7 @@ export function Reveal({ children, delay = 0, as: As = "div", className = "" }: 
     return () => obs.disconnect();
   }, [delay]);
   return (
-    <As ref={ref as any} className={`reveal ${className}`}>
+    <As ref={ref as Ref<HTMLElement>} className={`reveal ${className}`}>
       {children}
     </As>
   );

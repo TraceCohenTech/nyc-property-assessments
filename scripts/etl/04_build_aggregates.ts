@@ -79,7 +79,7 @@ async function main() {
   console.log(`Streaming ${CSV_PATH} ...`);
   const rl = createInterface({ input: createReadStream(CSV_PATH), crlfDelay: Infinity });
   let header: string[] | null = null;
-  let idx: Record<string, number> = {};
+  const idx: Record<string, number> = {};
 
   let totalRows = 0;
   let citywideMarket = 0;

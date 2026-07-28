@@ -153,7 +153,7 @@ export default async function BoroughDetailPage({ params }: { params: Promise<{ 
           />
         </div>
 
-        <div className="mt-2 text-xs text-slate-400">&ldquo;vs. citywide avg&rdquo; compares this borough to the simple average across all 5 boroughs.</div>
+        <div className="mt-2 text-xs text-slate-500">&ldquo;vs. citywide avg&rdquo; compares this borough to the simple average across all 5 boroughs.</div>
 
         <div className="mt-10 rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 shadow-card">
           <h2 className="font-bold text-slate-900 mb-1">By tax class</h2>

@@ -66,8 +66,12 @@ export function LookupTool() {
     <div>
       <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-2">
         <div className="relative flex-1">
+          <label htmlFor="rent-reg-lookup-q" className="sr-only">
+            Search by address or 10-digit BBL
+          </label>
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" aria-hidden="true" />
           <input
+            id="rent-reg-lookup-q"
             type="text"
             value={q}
             onChange={(e) => setQ(e.target.value)}

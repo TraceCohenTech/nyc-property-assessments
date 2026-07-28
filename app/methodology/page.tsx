@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 const SOURCE_STATUS: { name: string; status: "available" | "planned" | "unavailable"; note: string }[] = [
   { name: "DOF FY2027 Final Assessment Roll (PTS extract)", status: "available", note: "Primary source for every figure on this site." },
-  { name: "HCR rent-regulation registration files", status: "planned", note: "Needed for a real Rent Regulation section — not yet integrated; that page currently shows a rough age-based proxy only." },
+  { name: "HCR rent-regulation registration files", status: "available", note: "NYS HCR's 2024 building registration file (via NYC Rent Guidelines Board's official PDFs), joined by BBL at a 99.998% match rate (47,277 of 47,278 buildings). Building-level only — identifies buildings with ≥1 registered stabilized unit, not unit counts." },
   { name: "MapPLUTO (parcel coordinates)", status: "planned", note: "Needed to power the interactive Map page — not yet joined to the roll." },
   { name: "Historical assessment rolls (prior fiscal years)", status: "planned", note: "Would enable year-over-year trend views; only FY2027 is loaded today." },
   { name: "ACRIS (deed / sale transaction records)", status: "unavailable", note: "Would show actual sale prices vs. DOF market value; not currently in scope." },

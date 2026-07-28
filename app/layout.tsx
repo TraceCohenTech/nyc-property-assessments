@@ -25,7 +25,13 @@ const valueLabel = formatUSDAuto(data.citywide.total_market_value);
 
 const description = `${propertiesLabel}+ NYC properties, ${valueLabel} in total market value. Explore the FY2027 DOF assessment roll by borough, tax class, zip code, building type, and owner.`;
 
+// Placeholder production domain — no NEXT_PUBLIC_SITE_URL / custom domain is configured anywhere
+// in this repo (checked next.config.ts, package.json, vercel.json); update once a real domain
+// is assigned. Kept in sync with app/sitemap.ts's SITE_URL.
+const SITE_URL = "https://nyc-property-assessments.vercel.app";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: `${PRODUCT_NAME} | NYC FY2027 Property Assessment Roll`,
   description,
   openGraph: {

@@ -24,7 +24,7 @@ export function AliasList({ aliases }: { aliases: OwnerAlias[] }) {
           {aliases.map((a) => (
             <li key={a.raw} className="flex items-baseline justify-between gap-3">
               <span>{a.raw}</span>
-              <span className="tabular-nums text-slate-400 shrink-0">{formatNumber(a.lots)} lot{a.lots === 1 ? "" : "s"}</span>
+              <span className="tabular-nums text-slate-500 shrink-0">{formatNumber(a.lots)} lot{a.lots === 1 ? "" : "s"}</span>
             </li>
           ))}
         </ul>

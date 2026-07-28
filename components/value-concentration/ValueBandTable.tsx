@@ -33,13 +33,13 @@ export function ValueBandTable({ bands }: { bands: ValueBand[] }) {
   // curve is read ("top X% of lots hold Y% of value").
   const order = ["$50M+", "$20M–50M", "$10M–20M", "$5M–10M", "$2M–5M", "$1M–2M", "$500K–1M", "<$500K"];
   const byLargestFirst = [...bands].sort((a, b) => order.indexOf(a.band) - order.indexOf(b.band));
-  let cumValue = 0;
-  let cumLots = 0;
-  const rows = byLargestFirst.map((b) => {
-    cumValue += b.share_value;
-    cumLots += b.share_lots;
-    return { ...b, cumulative_share_value: cumValue, cumulative_share_lots: cumLots };
-  });
+  const rows = byLargestFirst.reduce<((ValueBand & { cumulative_share_value: number; cumulative_share_lots: number })[])>((acc, b) => {
+    const prev = acc[acc.length - 1];
+    const cumulative_share_value = (prev?.cumulative_share_value ?? 0) + b.share_value;
+    const cumulative_share_lots = (prev?.cumulative_share_lots ?? 0) + b.share_lots;
+    acc.push({ ...b, cumulative_share_value, cumulative_share_lots });
+    return acc;
+  }, []);
 
   const columns: DataTableColumn<(typeof rows)[number]>[] = [
     {
