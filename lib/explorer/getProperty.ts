@@ -1,5 +1,6 @@
 // Server-only module (uses @libsql/client directly) — never imported from a "use client"
 // component. Only called from Server Components / Route Handlers.
+import { cache } from "react";
 import { getDb, PROPERTY_COLUMNS, type PropertyRow, type OwnerGroupRow } from "@/lib/db";
 
 export type PropertyDetail = {
@@ -21,8 +22,19 @@ export type PropertyDetail = {
  * section — surfacing every property tied to a private person's identity is a doxxing vector,
  * so the query is skipped entirely (not just filtered client-side) when the owner is an
  * individual. See lib/ownerPrivacy.ts for the underlying classification.
+ *
+ * PERFORMANCE: wrapped in React's `cache()` so a single request only ever runs this once, even
+ * though the page calls it from both `generateMetadata` and the page body (Next.js does not
+ * dedupe plain async functions across those two call sites on its own — without `cache()` this
+ * function's ~4 sequential Turso round trips ran TWICE per request, which was measured to 504
+ * intermittently against the production Turso instance under cold-start conditions). The
+ * independent lookups (owner-group siblings, same-address siblings, nearby-by-value) are also
+ * run concurrently via Promise.all rather than serially, since none of them depend on each
+ * other's results — only on `primary`.
  */
-export async function getPropertyDetail(bblParam: string): Promise<PropertyDetail | null> {
+export const getPropertyDetail = cache(async function getPropertyDetail(
+  bblParam: string
+): Promise<PropertyDetail | null> {
   const cleaned = bblParam.replace(/[^0-9]/g, "");
   if (!/^\d{10}/.test(cleaned)) return null;
   const baseBbl = cleaned.slice(0, 10);
@@ -37,42 +49,51 @@ export async function getPropertyDetail(bblParam: string): Promise<PropertyDetai
   if (rows.length === 0) return null;
   const [primary, ...easements] = rows;
 
-  let ownerGroup: OwnerGroupRow | null = null;
-  let otherByOwnerGroup: PropertyDetail["otherByOwnerGroup"] = [];
+  const ownerGroupPromise: Promise<OwnerGroupRow | null> = primary.owner_group_id
+    ? db
+        .execute({
+          sql: `SELECT owner_group_id, canonical_name, owner_type, display_name, confidence, evidence_type, notes FROM owner_groups WHERE owner_group_id = ?`,
+          args: [primary.owner_group_id],
+        })
+        .then((r) => (r.rows.length > 0 ? (r.rows[0] as unknown as OwnerGroupRow) : null))
+    : Promise.resolve(null);
 
-  if (primary.owner_group_id) {
-    const groupResult = await db.execute({
-      sql: `SELECT owner_group_id, canonical_name, owner_type, display_name, confidence, evidence_type, notes FROM owner_groups WHERE owner_group_id = ?`,
-      args: [primary.owner_group_id],
-    });
-    if (groupResult.rows.length > 0) {
-      ownerGroup = groupResult.rows[0] as unknown as OwnerGroupRow;
-      const othersResult = await db.execute({
-        sql: `SELECT bbl, full_address, market_value FROM properties_v2 WHERE owner_group_id = ? AND bbl != ? GROUP BY bbl ORDER BY market_value DESC LIMIT 25`,
-        args: [primary.owner_group_id, baseBbl],
-      });
-      otherByOwnerGroup = (othersResult.rows as unknown as PropertyDetail["otherByOwnerGroup"]) ?? [];
-    }
-  }
   // Individual owners: intentionally no query at all — see function doc comment above.
+  const otherByOwnerGroupPromise: Promise<PropertyDetail["otherByOwnerGroup"]> = primary.owner_group_id
+    ? db
+        .execute({
+          sql: `SELECT bbl, full_address, market_value FROM properties_v2 WHERE owner_group_id = ? AND bbl != ? GROUP BY bbl ORDER BY market_value DESC LIMIT 25`,
+          args: [primary.owner_group_id, baseBbl],
+        })
+        .then((r) => (r.rows as unknown as PropertyDetail["otherByOwnerGroup"]) ?? [])
+    : Promise.resolve([]);
 
-  const atAddressResult = primary.full_address
-    ? await db.execute({
-        sql: `SELECT bbl, bbl_full, ease_code, building_class, market_value FROM properties_v2 WHERE full_address = ? AND bbl != ? LIMIT 25`,
-        args: [primary.full_address, baseBbl],
-      })
-    : { rows: [] };
-  const otherAtAddress = (atAddressResult.rows as unknown as PropertyDetail["otherAtAddress"]) ?? [];
+  const otherAtAddressPromise: Promise<PropertyDetail["otherAtAddress"]> = primary.full_address
+    ? db
+        .execute({
+          sql: `SELECT bbl, bbl_full, ease_code, building_class, market_value FROM properties_v2 WHERE full_address = ? AND bbl != ? LIMIT 25`,
+          args: [primary.full_address, baseBbl],
+        })
+        .then((r) => (r.rows as unknown as PropertyDetail["otherAtAddress"]) ?? [])
+    : Promise.resolve([]);
 
-  const nearbyResult = primary.zip
-    ? await db.execute({
-        sql: `SELECT bbl, full_address, market_value, building_class FROM properties_v2
+  const nearbyPromise: Promise<PropertyDetail["nearby"]> = primary.zip
+    ? db
+        .execute({
+          sql: `SELECT bbl, full_address, market_value, building_class FROM properties_v2
               WHERE zip = ? AND bbl != ? AND market_value IS NOT NULL AND ? IS NOT NULL
               ORDER BY ABS(market_value - ?) ASC LIMIT 8`,
-        args: [primary.zip, baseBbl, primary.market_value, primary.market_value ?? 0],
-      })
-    : { rows: [] };
-  const nearby = (nearbyResult.rows as unknown as PropertyDetail["nearby"]) ?? [];
+          args: [primary.zip, baseBbl, primary.market_value, primary.market_value ?? 0],
+        })
+        .then((r) => (r.rows as unknown as PropertyDetail["nearby"]) ?? [])
+    : Promise.resolve([]);
+
+  const [ownerGroup, otherByOwnerGroup, otherAtAddress, nearby] = await Promise.all([
+    ownerGroupPromise,
+    otherByOwnerGroupPromise,
+    otherAtAddressPromise,
+    nearbyPromise,
+  ]);
 
   return { primary, easements, ownerGroup, otherByOwnerGroup, otherAtAddress, nearby };
-}
+});
