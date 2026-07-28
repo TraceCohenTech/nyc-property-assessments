@@ -8,7 +8,8 @@ import { SourceBadge } from "@/components/ui/SourceBadge";
 import { MetricCard } from "@/components/ui/MetricCard";
 import { InsightCard } from "@/components/ui/InsightCard";
 import { CATEGORICAL_ORDER } from "@/lib/colors";
-import { TimelineClient, decadeToYearRange, type DecadeRow } from "@/components/analytics-b/TimelineClient";
+import { TimelineClient, type DecadeRow } from "@/components/analytics-b/TimelineClient";
+import { decadeToYearRange } from "@/components/analytics-b/decadeRange";
 
 const timeline = timelineRaw as unknown as { decades: DecadeRow[] };
 

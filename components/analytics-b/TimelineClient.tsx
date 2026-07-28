@@ -16,6 +16,7 @@ import { ExternalLink } from "lucide-react";
 
 import { AXIS_TICK, CATEGORICAL_ORDER, CHART_TOOLTIP_STYLE, GRID_STROKE } from "@/lib/colors";
 import { formatNumber, formatUSD, formatUSDFull } from "@/lib/format";
+import { decadeToYearRange } from "@/components/analytics-b/decadeRange";
 
 export type DecadeBorough = { borough: string; lots: number; market_value: number };
 export type DecadeRow = {
@@ -43,14 +44,6 @@ const METRIC_LABEL: Record<Metric, string> = {
   market_value: "Market value (current)",
   residential_units: "Residential units",
 };
-
-export function decadeToYearRange(decade: string): { min: number; max: number } | null {
-  if (decade === "Unknown") return null;
-  if (decade === "<1900") return { min: 1400, max: 1899 };
-  const start = parseInt(decade, 10);
-  if (Number.isNaN(start)) return null;
-  return { min: start, max: start + 9 };
-}
 
 export function TimelineClient({ decades }: { decades: DecadeRow[] }) {
   const [metric, setMetric] = useState<Metric>("lots");

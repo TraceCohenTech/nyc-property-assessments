@@ -3,34 +3,28 @@ import Link from "next/link";
 import { ArrowRight, Plane } from "lucide-react";
 
 import extremesRaw from "@/data/analytics/extremes.json";
-import { formatNumber, formatUSD, formatUSDFull } from "@/lib/format";
+import { formatNumber, formatUSD } from "@/lib/format";
 import { CATEGORICAL_ORDER } from "@/lib/colors";
 import { SourceBadge } from "@/components/ui/SourceBadge";
 import { MetricCard } from "@/components/ui/MetricCard";
 import { InsightCard } from "@/components/ui/InsightCard";
-import { DataTable, type DataTableColumn } from "@/components/ui/DataTable";
-import { ExportButton } from "@/components/ui/ExportButton";
 import { ExtremesSection } from "@/components/analytics-b/ExtremesSection";
-import { OwnerGroupCell } from "@/components/analytics-b/OwnerGroupCell";
-
-type PropertyRow = {
-  bbl: string;
-  address: string;
-  borough: string;
-  zip: string | null;
-  property_type: string;
-  building_class: string;
-  owner_entity_type: string;
-  owner_group_name: string | null;
-};
-
-type UnitsRow = PropertyRow & { residential_units: number; market_value: number };
-type AreaRow = PropertyRow & { building_area: number; market_value: number };
-type ValueRow = PropertyRow & { market_value: number };
-type PerUnitRow = PropertyRow & { residential_units: number; market_value: number; value_per_residential_unit: number };
-type OldestRow = PropertyRow & { year_built: number };
-type VacantLotRow = PropertyRow & { lot_area_sqft: number };
-type OwnerHoldingRow = { owner_group_id: number; name: string; owner_type: string; lots: number; total_lot_area_sqft: number; total_market_value: number };
+import {
+  ValueLeaderboardTable,
+  UnitsLeaderboardTable,
+  AreaLeaderboardTable,
+  PerUnitLeaderboardTable,
+  OldestLeaderboardTable,
+  VacantOwnerLeaderboardTable,
+  VacantLotLeaderboardTable,
+  type UnitsRow,
+  type AreaRow,
+  type ValueRow,
+  type PerUnitRow,
+  type OldestRow,
+  type VacantLotRow,
+  type OwnerHoldingRow,
+} from "@/components/analytics-b/ExtremesTables";
 
 const data = extremesRaw as unknown as {
   biggest_by_residential_units: UnitsRow[];
@@ -48,97 +42,10 @@ export const metadata: Metadata = {
     "Leaderboards for NYC's biggest, most valuable, oldest, and most extreme tax lots — including JFK Airport, a single $18.88B parcel, and the entity owners holding the most vacant land in the city.",
 };
 
-const propCols = {
-  address: (): DataTableColumn<PropertyRow> => ({
-    key: "address",
-    label: "Address",
-    sortable: true,
-    sortValue: (r) => r.address,
-    render: (r) => (
-      <Link href={`/properties/${r.bbl}`} className="font-semibold text-blue-700 hover:underline">
-        {r.address || `BBL ${r.bbl}`}
-      </Link>
-    ),
-  }),
-  borough: (): DataTableColumn<PropertyRow> => ({
-    key: "borough",
-    label: "Borough",
-    sortable: true,
-    sortValue: (r) => r.borough,
-    render: (r) => r.borough,
-  }),
-  owner: (): DataTableColumn<PropertyRow> => ({
-    key: "owner",
-    label: "Owner",
-    render: (r) => <OwnerGroupCell name={r.owner_group_name} />,
-  }),
-};
-
 export default function ExtremesPage() {
   const jfk = data.most_valuable_single_lots[0];
   const riverbay = data.biggest_by_residential_units[0];
   const parksVacant = data.largest_vacant_land_holdings_by_owner_group[0];
-
-  const unitsColumns: DataTableColumn<UnitsRow>[] = [
-    propCols.address(),
-    propCols.borough(),
-    { key: "residential_units", label: "Units", align: "right", sortable: true, render: (r) => formatNumber(r.residential_units), sortValue: (r) => r.residential_units },
-    { key: "market_value", label: "Value", align: "right", sortable: true, render: (r) => formatUSD(r.market_value, 1), sortValue: (r) => r.market_value },
-    propCols.owner(),
-  ];
-
-  const areaColumns: DataTableColumn<AreaRow>[] = [
-    propCols.address(),
-    propCols.borough(),
-    { key: "building_area", label: "Building area (sqft)", align: "right", sortable: true, render: (r) => formatNumber(r.building_area), sortValue: (r) => r.building_area },
-    { key: "market_value", label: "Value", align: "right", sortable: true, render: (r) => formatUSD(r.market_value, 1), sortValue: (r) => r.market_value },
-    propCols.owner(),
-  ];
-
-  const valueColumns: DataTableColumn<ValueRow>[] = [
-    propCols.address(),
-    propCols.borough(),
-    { key: "property_type", label: "Type", sortable: true, sortValue: (r) => r.property_type, render: (r) => <span className="capitalize">{r.property_type}</span> },
-    { key: "market_value", label: "Market value", align: "right", sortable: true, render: (r) => formatUSDFull(r.market_value), sortValue: (r) => r.market_value },
-    propCols.owner(),
-  ];
-
-  const perUnitColumns: DataTableColumn<PerUnitRow>[] = [
-    propCols.address(),
-    propCols.borough(),
-    { key: "residential_units", label: "Units", align: "right", sortable: true, render: (r) => formatNumber(r.residential_units), sortValue: (r) => r.residential_units },
-    { key: "value_per_residential_unit", label: "$ / unit", align: "right", sortable: true, render: (r) => formatUSDFull(r.value_per_residential_unit), sortValue: (r) => r.value_per_residential_unit },
-    propCols.owner(),
-  ];
-
-  const oldestColumns: DataTableColumn<OldestRow>[] = [
-    propCols.address(),
-    propCols.borough(),
-    { key: "year_built", label: "Year built", align: "right", sortable: true, render: (r) => r.year_built, sortValue: (r) => r.year_built },
-    { key: "property_type", label: "Type", sortable: true, sortValue: (r) => r.property_type, render: (r) => <span className="capitalize">{r.property_type}</span> },
-    propCols.owner(),
-  ];
-
-  const vacantOwnerColumns: DataTableColumn<OwnerHoldingRow>[] = [
-    {
-      key: "name",
-      label: "Owner",
-      sortable: true,
-      sortValue: (r) => r.name,
-      render: (r) => <OwnerGroupCell name={r.name} />,
-    },
-    { key: "owner_type", label: "Type", sortable: true, sortValue: (r) => r.owner_type, render: (r) => r.owner_type },
-    { key: "lots", label: "Vacant lots", align: "right", sortable: true, render: (r) => formatNumber(r.lots), sortValue: (r) => r.lots },
-    { key: "total_lot_area_sqft", label: "Total lot area (sqft)", align: "right", sortable: true, render: (r) => formatNumber(r.total_lot_area_sqft), sortValue: (r) => r.total_lot_area_sqft },
-    { key: "total_market_value", label: "Total value", align: "right", sortable: true, render: (r) => formatUSD(r.total_market_value, 1), sortValue: (r) => r.total_market_value },
-  ];
-
-  const vacantLotColumns: DataTableColumn<VacantLotRow>[] = [
-    propCols.address(),
-    propCols.borough(),
-    { key: "lot_area_sqft", label: "Lot area (sqft)", align: "right", sortable: true, render: (r) => formatNumber(r.lot_area_sqft), sortValue: (r) => r.lot_area_sqft },
-    propCols.owner(),
-  ];
 
   return (
     <div className="pt-24 sm:pt-28 pb-24">
@@ -192,10 +99,7 @@ export default function ExtremesPage() {
             title="Most valuable single lots"
             description="Ranked by DOF market value — dominated by Manhattan office towers, utility infrastructure, and one very large airport."
           >
-            <div className="flex justify-end mb-2">
-              <ExportButton rows={data.most_valuable_single_lots} filename="nyc-most-valuable-lots.csv" />
-            </div>
-            <DataTable columns={valueColumns} rows={data.most_valuable_single_lots} rowKey={(r) => r.bbl} initialSortKey="market_value" />
+            <ValueLeaderboardTable rows={data.most_valuable_single_lots} />
           </ExtremesSection>
 
           <ExtremesSection
@@ -203,10 +107,7 @@ export default function ExtremesPage() {
             title="Biggest by residential units"
             description="Single tax lots with the most residential units on file — mostly Mitchell-Lama and large co-op/rental complexes."
           >
-            <div className="flex justify-end mb-2">
-              <ExportButton rows={data.biggest_by_residential_units} filename="nyc-biggest-by-units.csv" />
-            </div>
-            <DataTable columns={unitsColumns} rows={data.biggest_by_residential_units} rowKey={(r) => r.bbl} initialSortKey="residential_units" />
+            <UnitsLeaderboardTable rows={data.biggest_by_residential_units} />
           </ExtremesSection>
 
           <ExtremesSection
@@ -214,10 +115,7 @@ export default function ExtremesPage() {
             title="Biggest by building area"
             description="Largest building footprints in square feet — includes some odd institutional/government records worth a second look."
           >
-            <div className="flex justify-end mb-2">
-              <ExportButton rows={data.biggest_by_building_area} filename="nyc-biggest-by-area.csv" />
-            </div>
-            <DataTable columns={areaColumns} rows={data.biggest_by_building_area} rowKey={(r) => r.bbl} initialSortKey="building_area" />
+            <AreaLeaderboardTable rows={data.biggest_by_building_area} />
           </ExtremesSection>
 
           <ExtremesSection
@@ -225,10 +123,7 @@ export default function ExtremesPage() {
             title="Highest value per residential unit"
             description="Total market value divided by residential unit count — limited to lots with 10+ units to avoid single/duo-unit noise."
           >
-            <div className="flex justify-end mb-2">
-              <ExportButton rows={data.highest_value_per_residential_unit} filename="nyc-value-per-unit.csv" />
-            </div>
-            <DataTable columns={perUnitColumns} rows={data.highest_value_per_residential_unit} rowKey={(r) => r.bbl} initialSortKey="value_per_residential_unit" />
+            <PerUnitLeaderboardTable rows={data.highest_value_per_residential_unit} />
           </ExtremesSection>
 
           <ExtremesSection
@@ -236,10 +131,7 @@ export default function ExtremesPage() {
             title="Oldest still standing"
             description="Structures built before 1700 are excluded as near-certain data errors — everything here is a real surviving building."
           >
-            <div className="flex justify-end mb-2">
-              <ExportButton rows={data.oldest_still_standing} filename="nyc-oldest-buildings.csv" />
-            </div>
-            <DataTable columns={oldestColumns} rows={data.oldest_still_standing} rowKey={(r) => r.bbl} initialSortKey="year_built" initialSortDesc={false} />
+            <OldestLeaderboardTable rows={data.oldest_still_standing} />
           </ExtremesSection>
 
           <ExtremesSection
@@ -247,10 +139,7 @@ export default function ExtremesPage() {
             title="Largest vacant-land holders"
             description="Entity owner-groups (never individuals) ranked by summed lot area across all their vacant-land parcels citywide."
           >
-            <div className="flex justify-end mb-2">
-              <ExportButton rows={data.largest_vacant_land_holdings_by_owner_group} filename="nyc-vacant-land-owners.csv" />
-            </div>
-            <DataTable columns={vacantOwnerColumns} rows={data.largest_vacant_land_holdings_by_owner_group} rowKey={(r) => String(r.owner_group_id)} initialSortKey="total_lot_area_sqft" />
+            <VacantOwnerLeaderboardTable rows={data.largest_vacant_land_holdings_by_owner_group} />
           </ExtremesSection>
 
           <ExtremesSection
@@ -258,10 +147,7 @@ export default function ExtremesPage() {
             title="Largest single vacant lots"
             description="Individual vacant-land parcels ranked by lot area — not aggregated by owner."
           >
-            <div className="flex justify-end mb-2">
-              <ExportButton rows={data.largest_single_vacant_lots} filename="nyc-vacant-lots.csv" />
-            </div>
-            <DataTable columns={vacantLotColumns} rows={data.largest_single_vacant_lots} rowKey={(r) => r.bbl} initialSortKey="lot_area_sqft" />
+            <VacantLotLeaderboardTable rows={data.largest_single_vacant_lots} />
           </ExtremesSection>
         </div>
 
