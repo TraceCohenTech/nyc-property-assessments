@@ -59,7 +59,7 @@ export default function OwnershipConcentrationPage() {
           <strong className="text-slate-900">{formatPct(individualLotShare, 1)}</strong> of NYC tax lots are
           individually owned — but they hold only{" "}
           <strong className="text-slate-900">{formatPct(splits.individual.share_of_citywide_value, 1)}</strong> of
-          citywide value. Most of the city's property wealth sits with a comparatively small number of entity
+          citywide value. Most of the city&apos;s property wealth sits with a comparatively small number of entity
           owners.
         </p>
 
@@ -69,7 +69,7 @@ export default function OwnershipConcentrationPage() {
             <strong className="text-slate-900">These are conservative floors, not ceilings.</strong> Entity
             owner-groups here are built by exact repeated-name matching only — a common NYC ownership structure is a
             unique single-building holding-company LLC, which never gets grouped and is invisible to the top-N
-            leaderboards below (it's still correctly counted as "LLC" in the aggregate splits, just not linked to any
+            leaderboards below (it&apos;s still correctly counted as &quot;LLC&quot; in the aggregate splits, just not linked to any
             other property). True corporate concentration is almost certainly higher than what these numbers show.
           </p>
         </div>
@@ -140,7 +140,7 @@ export default function OwnershipConcentrationPage() {
             <p className="text-sm text-slate-600 leading-relaxed">
               <strong className="text-slate-900">{formatNumber(data.owner_groups_over_100m)} tracked entity groups</strong>{" "}
               clear the $100M threshold — still a small fraction of the {formatNumber(data.total_entity_owner_groups)}{" "}
-              total tracked groups, underscoring how concentrated even the "tracked" population is.
+              total tracked groups, underscoring how concentrated even the &quot;tracked&quot; population is.
             </p>
           </div>
         </div>

@@ -66,10 +66,10 @@ export default function TaxBurdenPage() {
         <p className="mt-3 text-base sm:text-lg text-slate-600 max-w-3xl leading-relaxed">
           NYC assesses the same dollar of{" "}
           <DefinitionTooltip term="market value">
-            DOF's estimate of what a property would sell for on the open market — not a sale price or appraisal.
+            DOF&apos;s estimate of what a property would sell for on the open market — not a sale price or appraisal.
           </DefinitionTooltip>{" "}
           very differently depending on what kind of property it sits on. This is the single biggest structural
-          equity story in the property tax system, and it's set entirely by state law.
+          equity story in the property tax system, and it&apos;s set entirely by state law.
         </p>
 
         <div className="mt-4 rounded-2xl bg-orange-50 border border-orange-200 p-4 sm:p-5 flex items-start gap-2.5 text-sm text-slate-700">
@@ -107,7 +107,7 @@ export default function TaxBurdenPage() {
             The same class-level gap holds almost perfectly flat across every borough — this is a statutory rule
             (
             <DefinitionTooltip term="RPTL §1805">
-              NY State's Real Property Tax Law caps how fast a Class 1 property's assessed value can rise year over
+              NY State&apos;s Real Property Tax Law caps how fast a Class 1 property&apos;s assessed value can rise year over
               year (6% per year, 20% over five years), regardless of market appreciation. No such cap exists for
               Class 2, 3, or 4.
             </DefinitionTooltip>
@@ -121,15 +121,15 @@ export default function TaxBurdenPage() {
         <div className="mt-12">
           <h2 className="text-xl font-bold text-slate-900 mb-1">Why the gap exists</h2>
           <p className="text-sm sm:text-base text-slate-600 max-w-3xl leading-relaxed mb-6">
-            It isn't that Class 1 homes are worth less relative to their assessments for market reasons — it's that
-            state law puts a hard annual cap on how much a Class 1 property's assessed value is allowed to increase,
+            It isn&apos;t that Class 1 homes are worth less relative to their assessments for market reasons — it&apos;s that
+            state law puts a hard annual cap on how much a Class 1 property&apos;s assessed value is allowed to increase,
             even when its market value jumps. Classes 2 and 4 have no such cap, so their assessments track market
             value far more closely, year after year, compounding the gap over decades.
           </p>
           <TaxBurdenExampleCards class1Ratio={class1?.citywide_assessed_to_market_ratio ?? 0.06} class2Ratio={class2?.citywide_assessed_to_market_ratio ?? 0.45} />
           <p className="text-xs text-slate-500 mt-3 max-w-3xl leading-relaxed">
             In other words: a $1M single-family home and a $1M slice of a condo or rental building start from the
-            same market value, but the home's owner is taxed on roughly {formatPct((class1?.citywide_assessed_to_market_ratio ?? 0.06) / (class2?.citywide_assessed_to_market_ratio ?? 0.45), 0)}{" "}
+            same market value, but the home&apos;s owner is taxed on roughly {formatPct((class1?.citywide_assessed_to_market_ratio ?? 0.06) / (class2?.citywide_assessed_to_market_ratio ?? 0.45), 0)}{" "}
             as much assessed value as the condo/rental slice.
           </p>
         </div>
@@ -139,7 +139,7 @@ export default function TaxBurdenPage() {
             <h3 className="font-bold text-slate-900 mb-1">{FAMILY_LABEL["1"]}</h3>
             <p className="text-sm text-slate-600 leading-relaxed">
               Assessed at a fraction of market value, capped by RPTL §1805 — the class that benefits most from the
-              cap in dollar terms, since it's also the largest class by lot count ({formatNumber(class1?.count ?? 0)}{" "}
+              cap in dollar terms, since it&apos;s also the largest class by lot count ({formatNumber(class1?.count ?? 0)}{" "}
               lots).
             </p>
           </div>
@@ -148,7 +148,7 @@ export default function TaxBurdenPage() {
             <p className="text-sm text-slate-600 leading-relaxed">
               No annual cap — assessments move with market value, so co-op, condo, and rental owners are assessed on
               a share of value roughly {formatPct((class2?.citywide_assessed_to_market_ratio ?? 0.45) / (class1?.citywide_assessed_to_market_ratio ?? 0.06), 0)}{" "}
-              the size of a Class 1 owner's.
+              the size of a Class 1 owner&apos;s.
             </p>
           </div>
         </div>

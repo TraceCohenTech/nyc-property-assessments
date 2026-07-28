@@ -5,7 +5,7 @@ import { ArrowRight, Landmark, Info } from "lucide-react";
 import exemptionsRaw from "@/data/analytics/exemptions.json";
 import ownersIndexRaw from "@/data/owners/index.json";
 import type { OwnersIndex } from "@/lib/types";
-import { formatNumber, formatPct, formatUSD, formatUSDFull } from "@/lib/format";
+import { formatNumber, formatPct, formatUSD } from "@/lib/format";
 import { CATEGORICAL_ORDER } from "@/lib/colors";
 import { MetricCard } from "@/components/ui/MetricCard";
 import { SourceBadge } from "@/components/ui/SourceBadge";
