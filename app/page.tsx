@@ -4,17 +4,22 @@ import {
   Users,
   CalendarClock,
   Search as SearchIcon,
+  Building2,
+  Landmark,
+  Home as HomeIcon,
 } from "lucide-react";
 
 import raw from "@/data/aggregates.json";
-import type { Aggregates, Borough } from "@/lib/types";
+import insightsRaw from "@/data/insights.json";
+import type { Aggregates, Borough, InsightsData } from "@/lib/types";
 import { CountUp } from "@/components/CountUp";
 import { Reveal } from "@/components/Reveal";
-import { Nav } from "@/components/Nav";
 import { AssessmentFlowDiagram } from "@/components/AssessmentFlowDiagram";
 import { SearchTool } from "@/components/SearchTool";
 import { ZipTable } from "@/components/ZipTable";
 import { OwnersTable } from "@/components/OwnersTable";
+import { InsightCard } from "@/components/ui/InsightCard";
+import { ConfidenceBadge } from "@/components/ui/ConfidenceBadge";
 import {
   TaxEquityChart,
   BoroughValueChart,
@@ -22,11 +27,19 @@ import {
   TopOwnersChart,
   AgeDistributionChart,
 } from "@/components/charts/Charts";
-import { formatUSD, formatNumber, formatPct } from "@/lib/format";
+import {
+  ValueBandsMiniChart,
+  ConcentrationMiniChart,
+  OwnershipMiniChart,
+  HousingBandsMiniChart,
+  ResidentialUnitsByBoroughMiniChart,
+} from "@/components/charts/InsightCharts";
+import { formatUSD, formatUSDAuto, formatNumber, formatPct } from "@/lib/format";
 import { isEntityOwner } from "@/lib/ownerPrivacy";
 import { CATEGORICAL_ORDER } from "@/lib/colors";
 
 const data = raw as unknown as Aggregates;
+const insights = insightsRaw as unknown as InsightsData;
 
 export default function Home() {
   const { citywide, boroughs, tax_classes, zips, building_classes, top_owners, age_distribution, meta } = data;
@@ -37,6 +50,9 @@ export default function Home() {
   const ratioGap = class2.assessment_ratio / class1.assessment_ratio;
 
   const boroughsByValue = [...boroughs].sort((a, b) => b.total_assessed_value - a.total_assessed_value);
+  const boroughsByCount = [...boroughs].sort((a, b) => b.count - a.count);
+  const taxClassesByValue = [...tax_classes].sort((a, b) => b.total_market_value - a.total_market_value);
+  const totalUnits = insights.housing.residential_units_by_borough.reduce((sum, b) => sum + b.units, 0);
 
   const topZipsByCount = [...zips].sort((a, b) => b.count - a.count);
   const topBuildingClasses = building_classes.slice(0, 12);
@@ -49,13 +65,11 @@ export default function Home() {
     owner: o.owner.length > 22 ? o.owner.slice(0, 21) + "…" : o.owner,
   }));
 
+  const manhattanHeadliner = insights.borough_headliners.find((h) => h.borough === "Manhattan");
+  const queensHeadliner = insights.borough_headliners.find((h) => h.borough === "Queens");
+
   return (
     <div id="top" className="min-h-screen text-slate-900">
-      <a href="#main" className="skip-link">
-        Skip to content
-      </a>
-      <Nav />
-
       {/* HERO */}
       <header className="relative overflow-hidden bg-slate-950 text-white pt-24 sm:pt-28 pb-16 sm:pb-24 noise-overlay">
         <div className="mesh-bg" aria-hidden="true">
@@ -80,9 +94,9 @@ export default function Home() {
 
           <Reveal delay={120}>
             <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05]">
-              NYC's property roll,
+              NYC Property
               <br />
-              <span className="text-cyan-300">borough by borough.</span>
+              <span className="text-cyan-300">Assessment Explorer.</span>
             </h1>
             <p className="mt-3 text-sm text-blue-200/50 font-mono tracking-wide uppercase">
               NYC Dept. of Finance · FY2027 property assessment roll
@@ -91,32 +105,38 @@ export default function Home() {
 
           <Reveal delay={220}>
             <p className="mt-5 text-base sm:text-xl text-blue-100/85 max-w-3xl leading-relaxed">
-              Manhattan, Brooklyn, Queens, the Bronx, and Staten Island each assess property at a different
-              share of its market value.
-              <span className="text-white font-semibold"> None of them tax homeowners and everyone else the same way.</span>
+              Explore every NYC property, owner, tax class, building type, housing unit, and assessed
+              value in the FY2027 assessment roll.
+            </p>
+            <p className="mt-3 text-xs sm:text-sm text-blue-200/70 max-w-3xl leading-relaxed flex items-start gap-1.5">
+              <Info className="h-3.5 w-3.5 mt-0.5 shrink-0" aria-hidden="true" />
+              DOF market value is an assessment value used for tax administration — not necessarily
+              current sale price.
             </p>
           </Reveal>
 
-          <div className="mt-10 grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
-            {boroughsByValue.map((b, i) => (
-              <Reveal key={b.borough} delay={300 + i * 80}>
-                <HeroStat
-                  label={b.borough}
-                  value={<CountUp to={b.total_assessed_value / 1e9} decimals={1} prefix="$" suffix="B" />}
-                  sub={`${formatPct(b.assessment_ratio)} assmt. ratio · ${formatNumber(b.count)} parcels`}
-                />
-              </Reveal>
-            ))}
+          {/* KPI grid — data-driven, never hardcoded */}
+          <div className="mt-10 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <Reveal delay={300}>
+              <HeroStat label="Total tax lots" value={<CountUp to={citywide.total_properties} />} sub="FY2027 final roll" />
+            </Reveal>
+            <Reveal delay={360}>
+              <HeroStat label="Total market value" value={formatUSDAuto(citywide.total_market_value)} sub="DOF assessment value, not sale price" />
+            </Reveal>
+            <Reveal delay={420}>
+              <HeroStat label="Total housing units" value={<CountUp to={totalUnits} />} sub="Across all 5 boroughs" />
+            </Reveal>
+            <Reveal delay={480}>
+              <HeroStat label="Boroughs" value={String(boroughs.length)} sub={`${boroughsByValue[0]?.borough} leads by value`} />
+            </Reveal>
           </div>
 
           <Reveal delay={640}>
             <div className="mt-8 flex flex-wrap items-start gap-2 text-xs text-blue-100/70">
               <Info className="h-3.5 w-3.5 mt-0.5 shrink-0" aria-hidden="true" />
               <span>
-                Across all five boroughs: {formatNumber(citywide.total_properties)} properties,{" "}
-                {formatUSD(citywide.total_market_value, 2)} in total market value, tax classes 1–4 combined.
-                Figures are computed directly from DOF's raw FY2027 PTS extract (extract dated 2026-05-15) and
-                may vary slightly from DOF's own published summary tables.
+                Figures are computed directly from DOF's raw FY2027 PTS extract (extract dated
+                2026-05-15) and may vary slightly from DOF's own published summary tables.
               </span>
             </div>
           </Reveal>
@@ -124,28 +144,149 @@ export default function Home() {
       </header>
 
       <main id="main" className="mx-auto max-w-[1600px] px-4 sm:px-6 py-12 sm:py-20 space-y-16 sm:space-y-24">
-        {/* BENTO KPI GRID — borough by borough */}
+        {/* SECONDARY KPI ROW */}
         <section>
           <Reveal>
             <SectionTitle
               eyebrow="At a glance"
-              title="Borough by borough"
-              sub="Market value, assessed value, and the assessment ratio (assessed ÷ market) for each of the five boroughs."
+              title="The FY2027 roll, by the numbers"
+              sub="Every headline figure below is computed live from the underlying dataset — never hand-typed."
             />
           </Reveal>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
-            {boroughsByValue.map((b, i) => (
-              <Reveal key={b.borough} delay={60 + i * 60}>
-                <BoroughKpiCard borough={b} accent={CATEGORICAL_ORDER[i % CATEGORICAL_ORDER.length]} />
-              </Reveal>
-            ))}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <Reveal delay={60}>
+              <KpiCard
+                icon={<Building2 className="h-4 w-4" aria-hidden="true" />}
+                label="Largest borough by value"
+                value={boroughsByValue[0]?.borough}
+                sub={formatUSDAuto(boroughsByValue[0]?.total_market_value ?? 0)}
+                accent={CATEGORICAL_ORDER[0]}
+              />
+            </Reveal>
+            <Reveal delay={120}>
+              <KpiCard
+                icon={<MapPinned className="h-4 w-4" aria-hidden="true" />}
+                label="Largest borough by lot count"
+                value={boroughsByCount[0]?.borough}
+                sub={`${formatNumber(boroughsByCount[0]?.count ?? 0)} lots`}
+                accent={CATEGORICAL_ORDER[1]}
+              />
+            </Reveal>
+            <Reveal delay={180}>
+              <KpiCard
+                icon={<Landmark className="h-4 w-4" aria-hidden="true" />}
+                label="Largest tax class by value"
+                value={`Class ${taxClassesByValue[0]?.tax_class}`}
+                sub={formatUSDAuto(taxClassesByValue[0]?.total_market_value ?? 0)}
+                accent={CATEGORICAL_ORDER[2]}
+              />
+            </Reveal>
+            <Reveal delay={240}>
+              <KpiCard
+                icon={<HomeIcon className="h-4 w-4" aria-hidden="true" />}
+                label="LLC-owned value"
+                value={formatUSDAuto(insights.ownership.llc.total_value)}
+                sub={`${formatNumber(insights.ownership.llc.lots)} lots`}
+                accent={CATEGORICAL_ORDER[3]}
+              />
+            </Reveal>
           </div>
-          <p className="mt-3 text-xs text-slate-500 flex items-start gap-1.5 max-w-2xl">
-            <Info className="h-3.5 w-3.5 mt-0.5 shrink-0" aria-hidden="true" />
-            Computed from the raw DOF PTS extract ({formatNumber(meta.total_rows_processed)} rows processed,{" "}
-            {meta.bad_rows_skipped} skipped); figures may vary slightly from DOF's own published FY2027 summary
-            workbook.
-          </p>
+          {insights.placeholder && (
+            <p className="mt-3 text-xs text-slate-400 flex items-center gap-1.5">
+              <ConfidenceBadge level="planned" label="Preliminary insights" /> Ownership and housing figures above are
+              seed estimates pending the data pipeline's full computation.
+            </p>
+          )}
+        </section>
+
+        {/* INSIGHTS — 8 cards, each linking into the future explorer */}
+        <section>
+          <Reveal>
+            <SectionTitle
+              eyebrow="Insights"
+              title="What the roll reveals"
+              sub="Eight cuts through the data — click through to explore each one."
+            />
+          </Reveal>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            <Reveal delay={60}>
+              <InsightCard
+                eyebrow="Value distribution"
+                headline={`Most lots sit in the ${insights.value_bands.slice().sort((a, b) => b.lots - a.lots)[0]?.band} band`}
+                description={`${formatPct(insights.value_bands.slice().sort((a, b) => b.lots - a.lots)[0]?.share_lots ?? 0)} of all tax lots fall in this range, but it's not where most of the city's value sits.`}
+                href="/explorer?sort=value_desc"
+                chart={<ValueBandsMiniChart bands={insights.value_bands} />}
+                accent={CATEGORICAL_ORDER[0]}
+              />
+            </Reveal>
+            <Reveal delay={120}>
+              <InsightCard
+                eyebrow="Concentration"
+                headline={`The top ${formatPct(insights.concentration.pct_lots_for_50pct_value)} of lots hold half the city's value`}
+                description={`Just ${formatPct(insights.concentration.pct_lots_for_80pct_value)} of lots account for 80% of total market value — NYC property value is highly concentrated.`}
+                href="/explorer?sort=value_desc"
+                chart={<ConcentrationMiniChart curve={insights.concentration.curve} />}
+                accent={CATEGORICAL_ORDER[1]}
+              />
+            </Reveal>
+            <Reveal delay={180}>
+              <InsightCard
+                eyebrow="Mega-parcels"
+                headline={`${formatNumber(insights.concentration.lots_above_50m)} lots are worth over $50M each`}
+                description="A tiny slice of the roll — mostly commercial towers and large multifamily buildings — carries an outsized share of total value."
+                href="/explorer?value_min=50000000"
+                accent={CATEGORICAL_ORDER[2]}
+              />
+            </Reveal>
+            <Reveal delay={240}>
+              <InsightCard
+                eyebrow="Ownership"
+                headline={`LLCs hold ${formatUSDAuto(insights.ownership.llc.total_value)} in property value`}
+                description={`Across ${formatNumber(insights.ownership.llc.lots)} tax lots — the single largest entity-ownership category citywide.`}
+                href="/explorer?entity=llc"
+                chart={<OwnershipMiniChart byType={insights.ownership.by_entity_type} />}
+                accent={CATEGORICAL_ORDER[3]}
+              />
+            </Reveal>
+            <Reveal delay={300}>
+              <InsightCard
+                eyebrow="Public sector"
+                headline={`Government owns ${formatUSDAuto(insights.ownership.government.total_value)} in assessed value`}
+                description={`${formatNumber(insights.ownership.government.lots)} city, state, and federal properties — schools, parks, housing authority buildings, and more.`}
+                href="/owners"
+                accent={CATEGORICAL_ORDER[4]}
+              />
+            </Reveal>
+            <Reveal delay={360}>
+              <InsightCard
+                eyebrow="Housing stock"
+                headline="Small buildings dominate the unit count"
+                description="1-3 unit buildings account for a huge share of NYC's residential units, even though large multifamily buildings hold more value per lot."
+                href="/housing"
+                chart={<HousingBandsMiniChart bands={insights.housing.unit_size_bands} />}
+                accent={CATEGORICAL_ORDER[5]}
+              />
+            </Reveal>
+            <Reveal delay={420}>
+              <InsightCard
+                eyebrow="Building age"
+                headline={`${formatNumber(insights.housing.pre_1940.lots)} lots predate 1940`}
+                description={`Prewar buildings still house roughly ${formatNumber(insights.housing.pre_1940.units)} units citywide — a huge share of the city's housing stock.`}
+                href="/explorer?year_built_max=1940"
+                accent={CATEGORICAL_ORDER[0]}
+              />
+            </Reveal>
+            <Reveal delay={480}>
+              <InsightCard
+                eyebrow="Borough spotlight"
+                headline={manhattanHeadliner ? `Manhattan: ${manhattanHeadliner.headline.toLowerCase()}` : "Manhattan leads by value"}
+                description={queensHeadliner ? `Meanwhile, Queens leads on a different measure: ${queensHeadliner.headline.toLowerCase()} (${queensHeadliner.stat}).` : "Explore how each borough compares."}
+                href="/boroughs"
+                chart={<ResidentialUnitsByBoroughMiniChart rows={insights.housing.residential_units_by_borough} />}
+                accent={CATEGORICAL_ORDER[1]}
+              />
+            </Reveal>
+          </div>
         </section>
 
         {/* ASSESSMENT PROCESS DIAGRAM */}
@@ -170,9 +311,16 @@ export default function Home() {
             <SectionTitle
               eyebrow="By borough"
               title="Manhattan carries a third of the city's value in a tenth of the parcels"
-              sub="Property count, market value, and the assessment ratio (assessed ÷ market) side by side for all five boroughs."
+              sub="Property count, market value, and the assessment ratio (assessed ÷ market) side by side for all five boroughs. Full borough profiles →"
             />
           </Reveal>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 mb-6">
+            {boroughsByValue.map((b, i) => (
+              <Reveal key={b.borough} delay={60 + i * 60}>
+                <BoroughKpiCard borough={b} accent={CATEGORICAL_ORDER[i % CATEGORICAL_ORDER.length]} />
+              </Reveal>
+            ))}
+          </div>
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-6">
             <Reveal delay={100} className="lg:col-span-3">
               <Card>
@@ -225,7 +373,7 @@ export default function Home() {
             <SectionTitle
               eyebrow="The tax-equity gap"
               title="Homeowners pay tax on ~6% of their home's value. Everyone else pays on ~45%."
-              sub="NYC's tax classes are assessed at wildly different fractions of market value — a well-documented, long-running controversy in city property tax policy."
+              sub="NYC's tax classes are assessed at wildly different fractions of market value — a well-documented, long-running controversy in city property tax policy. Full breakdown on the Tax Classes page →"
             />
           </Reveal>
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-6">
@@ -307,7 +455,7 @@ export default function Home() {
           <Reveal delay={100}>
             <Card>
               <h3 className="font-bold text-slate-900 mb-1">Top 12 building classes by count</h3>
-              <p className="text-xs text-slate-500 mb-3">Out of 60 classes tracked citywide</p>
+              <p className="text-xs text-slate-500 mb-3">Out of {building_classes.length} classes tracked citywide</p>
               <div className="h-[380px] sm:h-[420px]">
                 <BuildingClassChart classes={topBuildingClasses} />
               </div>
@@ -321,7 +469,7 @@ export default function Home() {
             <SectionTitle
               eyebrow="Ownership concentration"
               title="The largest entity owners in NYC"
-              sub="Ranked by aggregate assessed value across all their holdings. Government, utility, and institutional owners are filtered out of the underlying dataset already; individual people's names are additionally never shown — only businesses, LLCs, trusts, and other organizations appear here."
+              sub="Ranked by aggregate assessed value across all their holdings. Individual people's names are never shown — only businesses, LLCs, trusts, and other organizations appear here. Full owners directory →"
             />
           </Reveal>
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-6">
@@ -350,7 +498,7 @@ export default function Home() {
           <Reveal>
             <SectionTitle
               eyebrow="Look up a property"
-              title="Search the full 1.6M+ row roll"
+              title={`Search the full ${formatNumber(meta.total_rows_processed)}-row roll`}
               sub="Search by street address, owner name, or BBL (borough digit + 5-digit block + 4-digit lot, e.g. 1008710031). Live query against the full database — individual owners' names are shown as “Private Owner”; only business, institutional, and government owners are named."
             />
           </Reveal>
@@ -408,6 +556,7 @@ export default function Home() {
                   {formatNumber(meta.total_rows_processed)} rows processed across all five boroughs and tax classes
                   1–4. Figures here run somewhat higher than DOF's own published FY2027 summary workbook — direct
                   DOF PTS extracts commonly diverge slightly from that office's rounded, filtered summary tables.
+                  Full methodology →
                 </p>
               </div>
               <div className="lg:col-span-2 grid grid-cols-2 gap-3">
@@ -429,30 +578,13 @@ export default function Home() {
                 </div>
                 <div className="rounded-xl bg-white/10 backdrop-blur border border-white/20 p-4">
                   <div className="text-xs text-blue-200 uppercase tracking-wider font-semibold">Tax classes</div>
-                  <div className="text-2xl sm:text-3xl font-bold text-cyan-300 mt-1">4</div>
+                  <div className="text-2xl sm:text-3xl font-bold text-cyan-300 mt-1">{tax_classes.length}</div>
                 </div>
               </div>
             </div>
           </section>
         </Reveal>
       </main>
-
-      <footer className="border-t border-slate-200 bg-white py-10">
-        <div className="mx-auto max-w-[1600px] px-4 sm:px-6 text-center">
-          <p className="text-sm text-slate-600 mb-3">
-            Data: NYC Dept. of Finance FY2027 Property Assessment Roll (raw PTS extract). Not tax or investment advice.
-          </p>
-          <p className="text-sm text-gray-500">
-            <a href="https://x.com/Trace_Cohen" target="_blank" rel="noopener" className="text-blue-600 hover:underline font-semibold">
-              Twitter
-            </a>
-            {" | "}
-            <a href="mailto:t@nyvp.com" className="text-blue-600 hover:underline font-semibold">
-              t@nyvp.com
-            </a>
-          </p>
-        </div>
-      </footer>
     </div>
   );
 }
@@ -485,6 +617,31 @@ function HeroStat({ label, value, sub }: { label: string; value: React.ReactNode
       <div className="text-[10px] sm:text-xs uppercase tracking-[0.15em] text-white/70 font-semibold">{label}</div>
       <div className="text-2xl sm:text-4xl font-bold mt-2 text-white stat-glow-subtle">{value}</div>
       {sub && <div className="text-xs text-white/70 mt-1">{sub}</div>}
+    </div>
+  );
+}
+
+function KpiCard({
+  icon,
+  label,
+  value,
+  sub,
+  accent,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: React.ReactNode;
+  sub?: string;
+  accent: string;
+}) {
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 card-hover h-full flex flex-col">
+      <div className="flex items-center gap-2 text-slate-500" style={{ color: accent }}>
+        {icon}
+        <div className="text-xs font-semibold uppercase tracking-wider">{label}</div>
+      </div>
+      <div className="text-xl sm:text-2xl font-bold text-slate-900 mt-2">{value}</div>
+      {sub && <div className="text-xs text-slate-500 mt-1 tabular-nums">{sub}</div>}
     </div>
   );
 }
