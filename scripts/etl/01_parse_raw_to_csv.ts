@@ -13,7 +13,7 @@
 
 import { createReadStream, createWriteStream } from "node:fs";
 import { createInterface } from "node:readline";
-import { transformRow, type CleanRow } from "./transform.ts";
+import { transformRow, type CleanRow } from "./transform";
 
 const SOURCES: { path: string; dataset: string }[] = [
   { path: "/Users/tracecohen/Downloads/PROPMAST_TC1_2027_FIN.txt", dataset: "PROPMAST_TC1_2027_FIN" },
@@ -105,7 +105,7 @@ async function main() {
   }
 
   out.end();
-  await new Promise((resolve) => out.on("finish", resolve));
+  await new Promise<void>((resolve) => out.on("finish", () => resolve()));
 
   const dupCount = [...dupBblFull.values()].filter((c) => c > 1).length;
   console.log(`Done. Total rows: ${total}, skipped: ${skipped}`);

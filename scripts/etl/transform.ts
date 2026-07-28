@@ -2,8 +2,8 @@
 // Field indices below are 1-indexed to match db/pts_property_master_layout.md exactly; we
 // convert to 0-indexed array access via `f(n)`.
 
-import { classifyOwnerEntityType } from "../../lib/owners/classify.ts";
-import { normalizeOwnerName } from "../../lib/owners/normalize.ts";
+import { classifyOwnerEntityType } from "../../lib/owners/classify";
+import { normalizeOwnerName } from "../../lib/owners/normalize";
 import buildingClassCodes from "../../db/building_class_codes.json" with { type: "json" };
 
 const BOROUGH_NAMES: Record<string, string> = {

@@ -22,9 +22,9 @@ import pg from "pg";
 import { createReadStream } from "node:fs";
 import { createInterface } from "node:readline";
 import { readFileSync } from "node:fs";
-import { classifyOwnerEntityType } from "../../lib/owners/classify.ts";
-import { normalizeOwnerName } from "../../lib/owners/normalize.ts";
-import { matchGovernmentGroup } from "./governmentGroups.ts";
+import { classifyOwnerEntityType } from "../../lib/owners/classify";
+import { normalizeOwnerName } from "../../lib/owners/normalize";
+import { matchGovernmentGroup } from "./governmentGroups";
 
 const CSV_PATH =
   process.env.ETL_CSV_PATH ||

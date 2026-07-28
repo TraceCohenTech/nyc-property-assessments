@@ -1,8 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { classifyOwnerEntityType, isEntityOwner } from "../lib/owners/classify.ts";
-import { normalizeOwnerName } from "../lib/owners/normalize.ts";
-import { isEntityOwner as legacyIsEntityOwner, displayOwner, PRIVATE_OWNER_LABEL } from "../lib/ownerPrivacy.ts";
+import { classifyOwnerEntityType, isEntityOwner } from "../lib/owners/classify";
+import { normalizeOwnerName } from "../lib/owners/normalize";
+import { isEntityOwner as legacyIsEntityOwner, displayOwner, PRIVATE_OWNER_LABEL } from "../lib/ownerPrivacy";
 
 test("spec examples — entity type classification", () => {
   assert.equal(classifyOwnerEntityType("DEPARTMENT OF EDUCATION"), "Government");
