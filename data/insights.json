@@ -1,0 +1,71 @@
+{
+  "placeholder": true,
+  "meta": {
+    "generated_at": "2026-07-28T00:00:00Z",
+    "canonical_row_count": 1167962,
+    "note": "Seeded by UI-layer agent as a placeholder matching the documented contract shape. The data agent should overwrite this file with computed values from the FY2027 roll and MUST remove the `placeholder` flag when it does."
+  },
+  "value_bands": [
+    { "band": "Under $100K", "lots": 42000, "total_market_value": 2500000000, "share_lots": 0.036, "share_value": 0.0013, "avg_value": 59500 },
+    { "band": "$100K – $500K", "lots": 398000, "total_market_value": 128000000000, "share_lots": 0.341, "share_value": 0.0669, "avg_value": 321600 },
+    { "band": "$500K – $1M", "lots": 412000, "total_market_value": 289000000000, "share_lots": 0.353, "share_value": 0.151, "avg_value": 701500 },
+    { "band": "$1M – $5M", "lots": 268000, "total_market_value": 520000000000, "share_lots": 0.229, "share_value": 0.2716, "avg_value": 1940300 },
+    { "band": "$5M – $10M", "lots": 22000, "total_market_value": 152000000000, "share_lots": 0.0188, "share_value": 0.0794, "avg_value": 6909000 },
+    { "band": "$10M – $50M", "lots": 16000, "total_market_value": 330000000000, "share_lots": 0.0137, "share_value": 0.1724, "avg_value": 20625000 },
+    { "band": "$50M – $100M", "lots": 2000, "total_market_value": 141000000000, "share_lots": 0.0017, "share_value": 0.0737, "avg_value": 70500000 },
+    { "band": "Over $100M", "lots": 835, "total_market_value": 352500000000, "share_lots": 0.0007, "share_value": 0.1841, "avg_value": 422000000 }
+  ],
+  "concentration": {
+    "curve": [
+      { "pct_lots": 0.1, "pct_value": 0.02 },
+      { "pct_lots": 0.25, "pct_value": 0.06 },
+      { "pct_lots": 0.5, "pct_value": 0.18 },
+      { "pct_lots": 0.75, "pct_value": 0.42 },
+      { "pct_lots": 0.9, "pct_value": 0.68 },
+      { "pct_lots": 0.95, "pct_value": 0.8 },
+      { "pct_lots": 1.0, "pct_value": 1.0 }
+    ],
+    "top_n": 200,
+    "pct_lots_for_50pct_value": 0.18,
+    "pct_lots_for_80pct_value": 0.42,
+    "lots_above_10m": 18835,
+    "lots_above_50m": 2835
+  },
+  "ownership": {
+    "by_entity_type": [
+      { "type": "LLC", "lots": 138000, "total_value": 503000000000 },
+      { "type": "Corporation", "lots": 41000, "total_value": 187000000000 },
+      { "type": "Trust / Estate", "lots": 29000, "total_value": 64000000000 },
+      { "type": "Government", "lots": 22000, "total_value": 118000000000 },
+      { "type": "Nonprofit / Institutional", "lots": 15000, "total_value": 96000000000 },
+      { "type": "Individual (private, not shown)", "lots": 922962, "total_value": 947000000000 }
+    ],
+    "llc": { "lots": 138000, "total_value": 503000000000 },
+    "government": { "lots": 22000, "total_value": 118000000000 }
+  },
+  "housing": {
+    "unit_size_bands": [
+      { "band": "1-3 units", "lots": 690000, "units": 940000 },
+      { "band": "4-10 units", "lots": 61000, "units": 340000 },
+      { "band": "11-50 units", "lots": 24000, "units": 560000 },
+      { "band": "51-100 units", "lots": 4200, "units": 300000 },
+      { "band": "100+ units", "lots": 3100, "units": 1791954 }
+    ],
+    "residential_units_by_borough": [
+      { "borough": "Manhattan", "units": 900000 },
+      { "borough": "Brooklyn", "units": 1050000 },
+      { "borough": "Queens", "units": 820000 },
+      { "borough": "Bronx", "units": 610000 },
+      { "borough": "Staten Island", "units": 151954 }
+    ],
+    "pre_1940": { "lots": 410000, "units": 1450000 },
+    "pre_1974_multifamily": { "lots": 58000, "units": 980000 }
+  },
+  "borough_headliners": [
+    { "borough": "Manhattan", "headline": "Highest total market value", "stat": "$656.3B" },
+    { "borough": "Queens", "headline": "Most tax lots", "stat": "382,909 lots" },
+    { "borough": "Brooklyn", "headline": "Most residential units", "stat": "~1.05M units" },
+    { "borough": "Bronx", "headline": "Lowest average market value per lot", "stat": "lowest of the five boroughs" },
+    { "borough": "Staten Island", "headline": "Smallest by every measure", "stat": "smallest lot count and value" }
+  ]
+}
