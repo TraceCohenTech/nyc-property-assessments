@@ -83,7 +83,9 @@ export function RatioMatrixTable({ rows }: { rows: MatrixRow[] }) {
   const byKey = new Map(rows.map((r) => [`${r.base_class_family}|${r.borough}`, r]));
 
   return (
-    <div className="overflow-x-auto -mx-2 px-2">
+    <div>
+      <p className="sm:hidden text-[11px] text-slate-400 mb-1.5">Swipe to see all columns &rarr;</p>
+      <div className="overflow-x-auto -mx-2 px-2">
       <table className="w-full min-w-[560px] text-sm border-separate border-spacing-0">
         <thead>
           <tr>
@@ -125,6 +127,7 @@ export function RatioMatrixTable({ rows }: { rows: MatrixRow[] }) {
         across all five boroughs within each class, confirming this is a statutory rule, not a borough-specific
         market effect.
       </p>
+      </div>
     </div>
   );
 }

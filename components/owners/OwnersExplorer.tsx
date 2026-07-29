@@ -235,7 +235,7 @@ export function OwnersExplorer({ consolidated, rawOwners }: { consolidated: Owne
                 <select
                   value={ownerType}
                   onChange={(e) => setOwnerType(e.target.value)}
-                  className="min-h-[40px] rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900"
+                  className="min-h-[44px] rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900"
                 >
                   <option value="">All types</option>
                   {OWNER_TYPES.map((t) => (
@@ -250,7 +250,7 @@ export function OwnersExplorer({ consolidated, rawOwners }: { consolidated: Owne
                 <select
                   value={borough}
                   onChange={(e) => setBorough(e.target.value)}
-                  className="min-h-[40px] rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900"
+                  className="min-h-[44px] rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900"
                 >
                   <option value="">All boroughs</option>
                   {BOROUGHS.map((b) => (
@@ -270,7 +270,7 @@ export function OwnersExplorer({ consolidated, rawOwners }: { consolidated: Owne
               placeholder="e.g. 100000000"
               value={minValue}
               onChange={(e) => setMinValue(e.target.value)}
-              className="min-h-[40px] rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900 placeholder:text-slate-400"
+              className="min-h-[44px] rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900 placeholder:text-slate-400"
             />
           </div>
         </div>

@@ -152,6 +152,7 @@ export default function HousingPage() {
             Lots (buildings) and residential units per band — the gap between the two columns is the properties-vs-units
             distinction in numbers.
           </p>
+          <p className="sm:hidden text-[11px] text-slate-400 mb-1.5">Swipe to see all columns &rarr;</p>
           <div className="overflow-x-auto -mx-2 px-2">
             <table className="w-full min-w-[480px] text-sm">
               <thead>
@@ -179,10 +180,10 @@ export default function HousingPage() {
         </div>
 
         <div className="mt-8 flex flex-wrap gap-4">
-          <Link href="/value-concentration" className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline">
+          <Link href="/value-concentration" className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline py-2 min-h-[44px]">
             See how property value concentrates the same way <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
-          <Link href="/rent-regulation" className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline">
+          <Link href="/rent-regulation" className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline py-2 min-h-[44px]">
             Explore pre-1974 multifamily &amp; rent regulation <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
         </div>

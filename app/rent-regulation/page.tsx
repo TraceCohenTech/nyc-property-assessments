@@ -240,13 +240,13 @@ export default function RentRegulationPage() {
         </div>
 
         <div className="mt-8 flex flex-wrap gap-4">
-          <Link href="/housing" className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline">
+          <Link href="/housing" className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline py-2 min-h-[44px]">
             See the citywide housing stock this fits into <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
-          <Link href="/owners" className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline">
+          <Link href="/owners" className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline py-2 min-h-[44px]">
             Explore the largest entity property owners <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
-          <Link href="/methodology" className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline">
+          <Link href="/methodology" className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline py-2 min-h-[44px]">
             Read the full methodology <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
         </div>

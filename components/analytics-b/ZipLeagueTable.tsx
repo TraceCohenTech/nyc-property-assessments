@@ -109,7 +109,7 @@ export function ZipLeagueTable({ zips }: { zips: ZipRow[] }) {
             id="zip-borough"
             value={borough}
             onChange={(e) => setBorough(e.target.value)}
-            className="min-h-[40px] rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900"
+            className="min-h-[44px] rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900"
           >
             {BOROUGHS.map((b) => (
               <option key={b} value={b}>
@@ -129,7 +129,7 @@ export function ZipLeagueTable({ zips }: { zips: ZipRow[] }) {
             placeholder="e.g. 100"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="min-h-[40px] w-32 rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900 placeholder:text-slate-400"
+            className="min-h-[44px] w-32 rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900 placeholder:text-slate-400"
           />
         </div>
         <div className="ml-auto flex items-center gap-3">

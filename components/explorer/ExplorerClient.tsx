@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowDown, ArrowUp, Search, Download, ChevronLeft, ChevronRight, Columns3 } from "lucide-react";
+import { ArrowDown, ArrowUp, Search, Download, ChevronLeft, ChevronRight, Columns3, SlidersHorizontal, ChevronDown } from "lucide-react";
 
 import { FilterPanel, type FilterField } from "@/components/ui/FilterPanel";
 import { OwnerBadge } from "@/components/ui/OwnerBadge";
@@ -94,6 +94,7 @@ export function ExplorerClient({ boroughs }: { boroughs: Borough[] }) {
     () => new Set(ALL_COLUMNS.filter((c) => c.defaultOn).map((c) => c.key))
   );
   const [colMenuOpen, setColMenuOpen] = useState(false);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const [results, setResults] = useState<PropertyListItem[]>([]);
   const [total, setTotal] = useState(0);
@@ -250,7 +251,30 @@ export function ExplorerClient({ boroughs }: { boroughs: Borough[] }) {
         </div>
 
         <div className="mt-4">
-          <FilterPanel fields={fields} values={filterValues} onChange={(k, v) => updateFilter(k, v)} />
+          <button
+            type="button"
+            onClick={() => setMobileFiltersOpen((o) => !o)}
+            aria-expanded={mobileFiltersOpen}
+            aria-controls="explorer-mobile-filters"
+            className="sm:hidden w-full min-h-[44px] flex items-center justify-between px-4 rounded-lg border border-slate-300 bg-white text-sm font-semibold text-slate-900"
+          >
+            <span className="inline-flex items-center gap-2">
+              <SlidersHorizontal className="h-4 w-4 text-blue-600" aria-hidden="true" />
+              Filters
+              {activeFilterCount > 0 && (
+                <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-blue-100 text-blue-700 text-xs font-bold">
+                  {activeFilterCount}
+                </span>
+              )}
+            </span>
+            <ChevronDown
+              className={`h-4 w-4 text-slate-500 transition-transform ${mobileFiltersOpen ? "rotate-180" : ""}`}
+              aria-hidden="true"
+            />
+          </button>
+          <div id="explorer-mobile-filters" className={`${mobileFiltersOpen ? "block" : "hidden"} sm:block mt-3 sm:mt-0`}>
+            <FilterPanel fields={fields} values={filterValues} onChange={(k, v) => updateFilter(k, v)} />
+          </div>
         </div>
 
         <div className="mt-3 flex flex-wrap items-center gap-3">
@@ -271,7 +295,7 @@ export function ExplorerClient({ boroughs }: { boroughs: Borough[] }) {
               id="explorer-sort"
               value={filters.sort || "value_desc"}
               onChange={(e) => setSort(e.target.value)}
-              className="min-h-[36px] rounded-lg border border-slate-300 bg-white px-2 text-xs text-slate-900"
+              className="min-h-[40px] rounded-lg border border-slate-300 bg-white px-2 text-xs sm:text-xs text-slate-900"
             >
               {SORT_OPTIONS.map((o) => (
                 <option key={o.value} value={o.value}>
@@ -299,7 +323,7 @@ export function ExplorerClient({ boroughs }: { boroughs: Borough[] }) {
               aria-haspopup="true"
               aria-expanded={colMenuOpen}
               aria-controls="explorer-column-menu"
-              className="inline-flex items-center gap-1.5 min-h-[36px] px-3 rounded-md text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 active:scale-[0.97]"
+              className="inline-flex items-center gap-1.5 min-h-[44px] px-3 rounded-md text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 active:scale-[0.97]"
             >
               <Columns3 className="h-3.5 w-3.5" aria-hidden="true" />
               Columns
@@ -336,7 +360,7 @@ export function ExplorerClient({ boroughs }: { boroughs: Borough[] }) {
           </div>
           <a
             href={exportHref}
-            className="inline-flex items-center gap-1.5 min-h-[36px] px-3 rounded-md text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 active:scale-[0.97]"
+            className="inline-flex items-center gap-1.5 min-h-[44px] px-3 rounded-md text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 active:scale-[0.97]"
           >
             <Download className="h-3.5 w-3.5" aria-hidden="true" />
             Export CSV
@@ -482,7 +506,7 @@ export function ExplorerClient({ boroughs }: { boroughs: Borough[] }) {
                 type="button"
                 onClick={() => goToPage(Math.max(1, currentPage - 1))}
                 disabled={currentPage <= 1}
-                className="inline-flex items-center gap-1 min-h-[36px] px-3 rounded-md text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 disabled:opacity-40"
+                className="inline-flex items-center gap-1 min-h-[44px] px-3 rounded-md text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 disabled:opacity-40"
               >
                 <ChevronLeft className="h-3.5 w-3.5" aria-hidden="true" />
                 Previous
@@ -494,7 +518,7 @@ export function ExplorerClient({ boroughs }: { boroughs: Borough[] }) {
                 type="button"
                 onClick={() => goToPage(Math.min(totalPages, currentPage + 1))}
                 disabled={currentPage >= totalPages}
-                className="inline-flex items-center gap-1 min-h-[36px] px-3 rounded-md text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 disabled:opacity-40"
+                className="inline-flex items-center gap-1 min-h-[44px] px-3 rounded-md text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 disabled:opacity-40"
               >
                 Next
                 <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />

@@ -151,13 +151,13 @@ export default function OwnershipConcentrationPage() {
         </div>
 
         <div className="mt-8 flex flex-wrap gap-4">
-          <Link href="/owners" className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline">
+          <Link href="/owners" className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline py-2 min-h-[44px]">
             Browse all ranked entity owners <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
-          <Link href="/methodology" className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline">
+          <Link href="/methodology" className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline py-2 min-h-[44px]">
             Read the full owner-consolidation methodology <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
-          <Link href="/value-concentration" className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline">
+          <Link href="/value-concentration" className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline py-2 min-h-[44px]">
             See lot-level value concentration <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
         </div>

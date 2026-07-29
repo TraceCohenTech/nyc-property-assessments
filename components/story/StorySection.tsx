@@ -38,7 +38,7 @@ export function StorySection({
           <p className="mt-4 text-base sm:text-lg text-slate-600 leading-relaxed max-w-xl">{headline}</p>
           <Link
             href={href}
-            className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:text-blue-800 active:scale-[0.98] min-h-[36px]"
+            className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:text-blue-800 active:scale-[0.98] min-h-[44px]"
           >
             {linkLabel}
             <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />

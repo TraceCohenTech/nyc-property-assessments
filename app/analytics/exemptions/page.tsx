@@ -168,10 +168,10 @@ export default function ExemptionsPage() {
         </div>
 
         <div className="mt-8 flex flex-wrap gap-4">
-          <Link href="/analytics/tax-burden" className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline">
+          <Link href="/analytics/tax-burden" className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline py-2 min-h-[44px]">
             See how the classes that DO pay are assessed <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
-          <Link href="/owners" className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline">
+          <Link href="/owners" className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline py-2 min-h-[44px]">
             Browse all entity owners <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
         </div>

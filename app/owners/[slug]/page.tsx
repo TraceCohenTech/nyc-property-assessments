@@ -154,7 +154,7 @@ export default async function OwnerProfilePage({ params }: { params: Promise<{ s
 
         <Link
           href={`/explorer?owner=${encodeURIComponent(profile.name)}`}
-          className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline"
+          className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline py-2 min-h-[44px]"
         >
           Open {profile.name} in Property Explorer <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
         </Link>

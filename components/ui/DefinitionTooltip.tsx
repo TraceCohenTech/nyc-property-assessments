@@ -28,7 +28,7 @@ export function DefinitionTooltip({ term, children }: { term: string; children: 
         <span
           id={id}
           role="tooltip"
-          className="absolute z-20 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 rounded-lg bg-slate-900 text-white text-xs leading-relaxed p-3 shadow-modal"
+          className="absolute z-20 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 max-w-[85vw] rounded-lg bg-slate-900 text-white text-xs leading-relaxed p-3 shadow-modal"
         >
           {children}
         </span>

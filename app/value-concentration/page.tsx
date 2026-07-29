@@ -138,7 +138,7 @@ export default function ValueConcentrationPage() {
             </ul>
             <Link
               href="/owners"
-              className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline"
+              className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline py-2 min-h-[44px]"
             >
               See which entity owners hold the most of that value <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
             </Link>

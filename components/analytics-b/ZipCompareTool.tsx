@@ -34,7 +34,7 @@ export function ZipCompareTool({ zips }: { zips: ZipRow[] }) {
             id="zip-compare-a"
             value={leftZip}
             onChange={(e) => setLeftZip(e.target.value)}
-            className="min-h-[40px] rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900"
+            className="min-h-[44px] rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900"
           >
             {sorted.map((z) => (
               <option key={z.zip} value={z.zip} disabled={z.zip === rightZip}>
@@ -51,7 +51,7 @@ export function ZipCompareTool({ zips }: { zips: ZipRow[] }) {
             id="zip-compare-b"
             value={rightZip}
             onChange={(e) => setRightZip(e.target.value)}
-            className="min-h-[40px] rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900"
+            className="min-h-[44px] rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900"
           >
             {sorted.map((z) => (
               <option key={z.zip} value={z.zip} disabled={z.zip === leftZip}>
@@ -64,6 +64,7 @@ export function ZipCompareTool({ zips }: { zips: ZipRow[] }) {
 
       {l && r && (
         <>
+          <p className="sm:hidden text-[11px] text-slate-400 mb-1.5">Swipe to see all columns &rarr;</p>
           <div className="overflow-x-auto -mx-2 px-2">
             <table className="w-full min-w-[560px] text-sm mb-6">
               <thead>

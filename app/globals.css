@@ -22,6 +22,13 @@ body {
 
 @media (max-width: 640px) {
   .recharts-cartesian-axis-tick text { font-size: 10px; }
+
+  /* iOS Safari auto-zooms the viewport when a focused form control computes
+     to <16px. Force all real inputs/selects/textareas to 16px on mobile so
+     tapping a filter never yanks the whole page into a zoomed-in state. */
+  input, select, textarea {
+    font-size: 16px !important;
+  }
 }
 
 /* Grid pattern */

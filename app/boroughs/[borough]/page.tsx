@@ -158,6 +158,7 @@ export default async function BoroughDetailPage({ params }: { params: Promise<{ 
         <div className="mt-10 rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 shadow-card">
           <h2 className="font-bold text-slate-900 mb-1">By tax class</h2>
           <p className="text-xs text-slate-500 mb-4">How {name}'s lots split across the four DOF tax classes.</p>
+          <p className="sm:hidden text-[11px] text-slate-400 mb-1.5">Swipe to see all columns &rarr;</p>
           <div className="overflow-x-auto -mx-2 px-2">
             <table className="w-full min-w-[560px] text-sm">
               <thead>
@@ -227,10 +228,10 @@ export default async function BoroughDetailPage({ params }: { params: Promise<{ 
         </div>
 
         <div className="mt-4 flex flex-wrap gap-4">
-          <Link href={`/explorer?borough=${encodeURIComponent(name)}`} className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline">
+          <Link href={`/explorer?borough=${encodeURIComponent(name)}`} className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline py-2 min-h-[44px]">
             Open {name} in Property Explorer <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
-          <Link href="/boroughs#compare" className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline">
+          <Link href="/boroughs#compare" className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline py-2 min-h-[44px]">
             Compare {name} to another borough <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
         </div>

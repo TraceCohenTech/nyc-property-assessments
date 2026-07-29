@@ -339,7 +339,8 @@ export default function Home() {
             <Reveal delay={200} className="lg:col-span-2">
               <Card className="h-full flex flex-col">
                 <h3 className="font-bold text-slate-900 mb-3">Borough breakdown</h3>
-                <div className="overflow-x-auto -mx-2 px-2 flex-1">
+                <p className="sm:hidden text-[11px] text-slate-400 mb-1.5">Swipe to see all columns &rarr;</p>
+          <div className="overflow-x-auto -mx-2 px-2 flex-1">
                   <table className="w-full min-w-[420px] text-sm">
                     <thead>
                       <tr className="border-b border-slate-200 text-left text-xs uppercase tracking-wider text-slate-500">
@@ -619,7 +620,7 @@ function Card({ children, className = "" }: { children: React.ReactNode; classNa
 function HeroStat({ label, value, sub }: { label: string; value: React.ReactNode; sub?: string }) {
   return (
     <div className="glass rounded-2xl p-4 sm:p-5">
-      <div className="text-[10px] sm:text-xs uppercase tracking-[0.15em] text-white/70 font-semibold">{label}</div>
+      <div className="text-[11px] sm:text-xs uppercase tracking-[0.15em] text-white/70 font-semibold">{label}</div>
       <div className="text-2xl sm:text-4xl font-bold mt-2 text-white stat-glow-subtle">{value}</div>
       {sub && <div className="text-xs text-white/70 mt-1">{sub}</div>}
     </div>

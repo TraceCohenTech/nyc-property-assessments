@@ -154,13 +154,13 @@ export default function TaxBurdenPage() {
         </div>
 
         <div className="mt-10 flex flex-wrap gap-4">
-          <Link href="/tax-classes" className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline">
+          <Link href="/tax-classes" className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline py-2 min-h-[44px]">
             Read the full tax-class breakdown <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
-          <Link href="/explorer?tax_class=1" className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline">
+          <Link href="/explorer?tax_class=1" className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline py-2 min-h-[44px]">
             Explore Class 1 properties <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
-          <Link href="/analytics/exemptions" className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline">
+          <Link href="/analytics/exemptions" className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline py-2 min-h-[44px]">
             See who pays nothing at all <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
         </div>

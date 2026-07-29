@@ -131,6 +131,7 @@ export default function MethodologyPage() {
 
         <section className="mt-10 mb-4">
           <h2 className="text-2xl font-bold text-slate-900 mb-4">Data sources — status</h2>
+          <p className="sm:hidden text-[11px] text-slate-400 mb-1.5">Swipe to see all columns &rarr;</p>
           <div className="overflow-x-auto -mx-2 px-2">
             <table className="w-full min-w-[640px] text-sm">
               <thead>

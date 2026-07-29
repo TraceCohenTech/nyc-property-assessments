@@ -84,7 +84,7 @@ export function BoroughCompareTool({ boroughs }: { boroughs: BoroughLite[] }) {
       <div className="grid grid-cols-2 gap-3 mb-6 max-w-md">
         <div className="flex flex-col gap-1">
           <label className="text-xs font-semibold text-slate-500">Borough A</label>
-          <select value={left} onChange={(e) => setLeft(e.target.value)} className="min-h-[40px] rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900">
+          <select value={left} onChange={(e) => setLeft(e.target.value)} className="min-h-[44px] rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900">
             {names.map((n) => (
               <option key={n} value={n} disabled={n === right}>
                 {n}
@@ -94,7 +94,7 @@ export function BoroughCompareTool({ boroughs }: { boroughs: BoroughLite[] }) {
         </div>
         <div className="flex flex-col gap-1">
           <label className="text-xs font-semibold text-slate-500">Borough B</label>
-          <select value={right} onChange={(e) => setRight(e.target.value)} className="min-h-[40px] rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900">
+          <select value={right} onChange={(e) => setRight(e.target.value)} className="min-h-[44px] rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900">
             {names.map((n) => (
               <option key={n} value={n} disabled={n === left}>
                 {n}
@@ -108,6 +108,7 @@ export function BoroughCompareTool({ boroughs }: { boroughs: BoroughLite[] }) {
 
       {l && r && (
         <>
+          <p className="sm:hidden text-[11px] text-slate-400 mb-1.5">Swipe to see all columns &rarr;</p>
           <div className="overflow-x-auto -mx-2 px-2">
             <table className="w-full min-w-[560px] text-sm mb-6">
               <thead>

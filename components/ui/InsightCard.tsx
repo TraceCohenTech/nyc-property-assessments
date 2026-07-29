@@ -31,7 +31,7 @@ export function InsightCard({
       {chart && <div className="mt-4 h-[120px]">{chart}</div>}
       <Link
         href={href}
-        className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:text-blue-800 active:scale-[0.98] min-h-[32px]"
+        className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:text-blue-800 active:scale-[0.98] min-h-[44px]"
       >
         {linkLabel}
         <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />

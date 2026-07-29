@@ -5,9 +5,13 @@ export function Footer() {
   return (
     <footer className="border-t border-slate-200 bg-white py-10 mt-auto">
       <div className="mx-auto max-w-[1600px] px-4 sm:px-6">
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-x-6 gap-y-2 mb-8 text-sm">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-x-6 gap-y-1 mb-8 text-sm">
           {PRIMARY_NAV.map((l) => (
-            <Link key={l.href} href={l.href} className="text-slate-600 hover:text-blue-700 hover:underline">
+            <Link
+              key={l.href}
+              href={l.href}
+              className="text-slate-600 hover:text-blue-700 hover:underline py-2 min-h-[44px] flex items-center"
+            >
               {l.label}
             </Link>
           ))}

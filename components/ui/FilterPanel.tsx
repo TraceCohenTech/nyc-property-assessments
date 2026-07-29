@@ -49,7 +49,7 @@ export function FilterPanel({
                 disabled={!wired}
                 value={values?.[f.key] ?? ""}
                 onChange={(e) => onChange?.(f.key, e.target.value)}
-                className="min-h-[40px] rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900 disabled:opacity-50 disabled:bg-slate-50"
+                className="min-h-[44px] rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900 disabled:opacity-50 disabled:bg-slate-50"
               >
                 <option value="">Any</option>
                 {f.options?.map((o) => (
@@ -66,7 +66,7 @@ export function FilterPanel({
                 placeholder={f.placeholder}
                 value={values?.[f.key] ?? ""}
                 onChange={(e) => onChange?.(f.key, e.target.value)}
-                className="min-h-[40px] rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900 placeholder:text-slate-400 disabled:opacity-50 disabled:bg-slate-50"
+                className="min-h-[44px] rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900 placeholder:text-slate-400 disabled:opacity-50 disabled:bg-slate-50"
               />
             )}
           </div>

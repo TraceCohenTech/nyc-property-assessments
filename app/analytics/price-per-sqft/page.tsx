@@ -106,10 +106,10 @@ export default function PriceSqftPage() {
         </div>
 
         <div className="mt-8 flex flex-wrap gap-4">
-          <Link href="/explorer" className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline">
+          <Link href="/explorer" className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline py-2 min-h-[44px]">
             Explore individual properties <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
-          <Link href="/analytics/tax-burden" className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline">
+          <Link href="/analytics/tax-burden" className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-700 hover:underline py-2 min-h-[44px]">
             See how value translates to tax burden <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
         </div>

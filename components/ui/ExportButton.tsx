@@ -37,7 +37,7 @@ export function ExportButton({ rows, filename = "export.csv", label = "Export CS
       type="button"
       onClick={handleClick}
       disabled={rows.length === 0}
-      className="inline-flex items-center gap-1.5 min-h-[36px] px-3 rounded-md text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 active:scale-[0.97] disabled:opacity-50"
+      className="inline-flex items-center gap-1.5 min-h-[44px] px-3 rounded-md text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 active:scale-[0.97] disabled:opacity-50"
     >
       <Download className="h-3.5 w-3.5" aria-hidden="true" />
       {label}
