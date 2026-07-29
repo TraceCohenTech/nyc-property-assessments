@@ -1,63 +1,56 @@
 import type { Metadata } from "next";
-import { MapPinned } from "lucide-react";
+import { readFileSync } from "node:fs";
+import path from "node:path";
 
-import raw from "@/data/aggregates.json";
-import type { Aggregates } from "@/lib/types";
-import { formatNumber, formatUSD } from "@/lib/format";
-import { CATEGORICAL_ORDER } from "@/lib/colors";
-import { MetricCard } from "@/components/ui/MetricCard";
 import { SourceBadge } from "@/components/ui/SourceBadge";
-import { EmptyState } from "@/components/ui/EmptyState";
 import { ConfidenceBadge } from "@/components/ui/ConfidenceBadge";
+import MapExplorer from "@/components/map/MapExplorerLoader";
 
-const data = raw as unknown as Aggregates;
+// Read directly off disk rather than a static `import ... from "*.geojson"` — Next's bundler
+// only wires up a JSON loader for the literal `.json` extension, and these files are named
+// `.geojson` on purpose (matches the ETL script output / the build brief). This runs at
+// request/build time on the server only; the parsed objects are passed as props into the
+// client map component below.
+function readMapGeoJSON(file: string): GeoJSON.FeatureCollection {
+  return JSON.parse(readFileSync(path.join(process.cwd(), "data", "map", file), "utf-8"));
+}
+const boroughsGeoJSON = readMapGeoJSON("boroughs.geojson");
+const zipsGeoJSON = readMapGeoJSON("zips.geojson");
 
 export const metadata: Metadata = {
   title: "NYC Property Map | NYC Property Assessment Explorer",
   description:
-    "An interactive map of NYC property assessments by lot, planned for a future release using MapPLUTO coordinates.",
+    "An interactive map of all 1.17M NYC tax lots, geocoded via NYC DCP MapPLUTO. Color by market value, value per lot, LLC share, government share, and more — borough and ZIP choropleths that zoom into individual lots.",
 };
 
 export default function MapPage() {
-  const topZips = [...data.zips].sort((a, b) => b.total_market_value - a.total_market_value).slice(0, 5);
-
   return (
     <div className="pt-24 sm:pt-28 pb-16 sm:pb-24">
       <div className="mx-auto max-w-[1600px] px-4 sm:px-6">
         <div className="mb-4 flex items-center gap-2 flex-wrap">
           <SourceBadge />
-          <ConfidenceBadge level="planned" />
+          <ConfidenceBadge level="high" />
         </div>
         <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-slate-900">Map</h1>
         <p className="mt-3 text-base sm:text-lg text-slate-600 max-w-3xl">
-          A lot-level interactive map is planned once MapPLUTO coordinates are joined to the assessment roll (see{" "}
-          <a href="/methodology" className="text-blue-700 font-semibold hover:underline">
-            Methodology
-          </a>
-          ). Until then, here's the zip-code view of where value concentrates today.
+          Every NYC tax lot, geocoded from NYC DCP MapPLUTO centroids and joined to the FY2027 assessment roll. Zoom
+          out for borough and ZIP-code choropleths; zoom into a neighborhood to see individual lots. Color by total
+          value, value per lot, LLC share, government share, and more.
         </p>
 
-        <div className="mt-10">
-          <div className="rounded-2xl border border-slate-200 bg-white shadow-card">
-            <EmptyState
-              icon={<MapPinned className="h-6 w-6" aria-hidden="true" />}
-              title="Interactive map — coming soon"
-              description="This page will render every tax lot geographically, colored by market value, tax class, or owner type."
-            />
-          </div>
+        <div className="mt-8">
+          <MapExplorer boroughs={boroughsGeoJSON} zips={zipsGeoJSON} />
         </div>
 
-        <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          {topZips.map((z, i) => (
-            <MetricCard
-              key={z.zip}
-              label={`Zip ${z.zip}`}
-              value={formatUSD(z.total_market_value, 1)}
-              sub={`${z.borough} · ${formatNumber(z.count)} lots`}
-              accent={CATEGORICAL_ORDER[i % CATEGORICAL_ORDER.length]}
-            />
-          ))}
-        </div>
+        <p className="mt-4 text-xs text-slate-500 max-w-3xl">
+          Owner names are shown only for businesses, LLCs, trusts, and government/institutional entities — individual
+          owners are always shown as &ldquo;Private Owner,&rdquo; matching the policy on every other page of this
+          site. See{" "}
+          <a href="/methodology" className="text-blue-700 font-semibold hover:underline">
+            Methodology
+          </a>{" "}
+          for the full geocoding match-rate breakdown.
+        </p>
       </div>
     </div>
   );

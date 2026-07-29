@@ -4,6 +4,10 @@
 db/properties.db
 db/properties.db-*
 
+# Map ETL scratch inputs (raw PLUTO CSV + unsimplified boundary downloads) — not needed at
+# runtime, only data/map/*.geojson is.
+data/map/_raw/
+
 # Local debug/dev artifacts
 *.tsbuildinfo
 .next/
