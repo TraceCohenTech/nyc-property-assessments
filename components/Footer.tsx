@@ -29,6 +29,10 @@ export function Footer() {
             <a href="mailto:t@nyvp.com" className="text-blue-600 hover:underline font-semibold">
               t@nyvp.com
             </a>
+            {" | "}
+            <a href="https://valueaddvc.com" target="_blank" rel="noopener" className="text-blue-600 hover:underline font-semibold">
+              More dashboards at ValueAddVC.com
+            </a>
           </p>
         </div>
       </div>
